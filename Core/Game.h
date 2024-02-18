@@ -1,25 +1,29 @@
 #pragma once
 
 #include "../View/Window.h"
+#include "Input/Device.h"
 
 namespace Core
 {
 	class Game final
 	{
 	public:
-		static Game New();
+		Game(LPCWSTR name);
 		~Game();
 
 		void Run();
 
+		View::Window& Window() { return *window_; }
+		Core::Input::Device& InputDevice() { return *inputDevice_; }
+
 	private:
-		Game(View::Window& window) : window_(window) {}
 
 		void Input();
 		void FixedUpdate();
 		void Update();
 		void Render();
 
-		View::Window& window_;
+		View::Window* window_;
+		Core::Input::Device* inputDevice_;
 	};
 }

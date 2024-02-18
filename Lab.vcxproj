@@ -20,13 +20,21 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core\Game.h" />
-    <ClInclude Include="Core\Stopwatch.h" />
-    <ClInclude Include="Data\Typedefs.h" />
+    <ClInclude Include="Core\Input\Device.h" />
+    <ClInclude Include="Core\Input\DevicePC.h" />
+    <ClInclude Include="Core\Input\Keys.h" />
+    <ClInclude Include="Core\Math\Math.h" />
+    <ClInclude Include="Core\Structs\Delegates.h" />
+    <ClInclude Include="Core\Structs\TimeAccumulator.h" />
+    <ClInclude Include="Lib\Types.h" />
     <ClInclude Include="View\Window.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Core\Game.cpp" />
-    <ClCompile Include="Core\Stopwatch.cpp" />
+    <ClCompile Include="Core\Input\Device.cpp" />
+    <ClCompile Include="Core\Input\DevicePC.cpp" />
+    <ClCompile Include="Core\Structs\Delegates.cpp" />
+    <ClCompile Include="Core\Structs\TimeAccumulator.cpp" />
     <ClCompile Include="Startup.cpp">
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
     </ClCompile>
@@ -141,6 +149,5 @@
     </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
-  <ImportGroup Label="ExtensionTargets">
-  </ImportGroup>
+  <ImportGroup Label="ExtensionTargets" />
 </Project>

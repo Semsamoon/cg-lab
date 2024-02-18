@@ -2,27 +2,32 @@
 
 #include <chrono>
 
-#include "Stopwatch.h"
+#include "Structs/TimeAccumulator.h"
+#include "Input/DevicePC.h"
 
-Core::Game Core::Game::New()
+Core::Game::Game(LPCWSTR name)
 {
-	auto& window = View::Window::New(L"Game").WndClass().HWindow(800, 800).Build();
-	return Game(window);
+	window_ = new View::Window(name, Input::DevicePC::InputWindowProcedure, 800, 800);
+	inputDevice_ = new Input::DevicePC(window_->HandlerWindow());
 }
 
 Core::Game::~Game()
 {
-	delete &window_;
+	delete window_;
+	delete inputDevice_;
 }
 
 void Core::Game::Run()
 {
-	auto stopwatch = Stopwatch::New();
+	Structs::TimeAccumulator time;
 
 	while (true) {
-		stopwatch.Update();
+		time.Update();
 		Input();
-		while (stopwatch.CanDecreaseLag(0.1)) FixedUpdate();
+		while (time.Accumulated() > 0.1) {
+			FixedUpdate();
+			time.Accumulated(time.Accumulated() - time.Delta());
+		}
 		Update();
 		Render();
 	}
