@@ -5,7 +5,7 @@
 #include "Structs/TimeAccumulator.h"
 #include "Input/DevicePC.h"
 
-Core::Game::Game(LPCWSTR name)
+Core::Game::Game(LPCWSTR name) : isFinished_(false)
 {
 	window_ = new View::Window(name, Input::DevicePC::InputWindowProcedure, 800, 800);
 	inputDevice_ = new Input::DevicePC(window_->HandlerWindow());
@@ -21,7 +21,7 @@ void Core::Game::Run()
 {
 	Structs::TimeAccumulator time;
 
-	while (true) {
+	while (!isFinished_) {
 		time.Update();
 		Input();
 		while (time.Accumulated() > 0.1) {
@@ -35,6 +35,20 @@ void Core::Game::Run()
 
 void Core::Game::Input()
 {
+	MSG msg;
+
+	while (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE)) {
+		TranslateMessage(&msg);
+		DispatchMessage(&msg);
+	}
+
+	if (msg.message == WM_QUIT) {
+		isFinished_ = true;
+	}
+
+	if (inputDevice_->IsKeyDown(Core::Input::Keys::Escape)) {
+		isFinished_ = true;
+	}
 }
 
 void Core::Game::FixedUpdate()

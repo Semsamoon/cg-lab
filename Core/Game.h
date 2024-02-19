@@ -25,5 +25,6 @@ namespace Core
 
 		View::Window* window_;
 		Core::Input::Device* inputDevice_;
+		bool isFinished_;
 	};
 }

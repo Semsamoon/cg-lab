@@ -19,18 +19,12 @@ bool Core::Input::Device::IsKeyDown(Keys key)
 
 void Core::Input::Device::OnMouseMove(RawMouseEvent args)
 {
-	if (args.ButtonFlags & static_cast<int32>(MouseFlags::LeftButtonDown))
-		AddPressedKey(Keys::LeftButton);
-	if (args.ButtonFlags & static_cast<int32>(MouseFlags::LeftButtonUp))
-		RemovePressedKey(Keys::LeftButton);
-	if (args.ButtonFlags & static_cast<int32>(MouseFlags::RightButtonDown))
-		AddPressedKey(Keys::RightButton);
-	if (args.ButtonFlags & static_cast<int32>(MouseFlags::RightButtonUp))
-		RemovePressedKey(Keys::RightButton);
-	if (args.ButtonFlags & static_cast<int32>(MouseFlags::MiddleButtonDown))
-		AddPressedKey(Keys::MiddleButton);
-	if (args.ButtonFlags & static_cast<int32>(MouseFlags::MiddleButtonUp))
-		RemovePressedKey(Keys::MiddleButton);
+	if (args.ButtonFlags & static_cast<int32>(MouseFlags::LeftButtonDown)) AddPressedKey(Keys::LeftButton);
+	if (args.ButtonFlags & static_cast<int32>(MouseFlags::LeftButtonUp)) RemovePressedKey(Keys::LeftButton);
+	if (args.ButtonFlags & static_cast<int32>(MouseFlags::RightButtonDown)) AddPressedKey(Keys::RightButton);
+	if (args.ButtonFlags & static_cast<int32>(MouseFlags::RightButtonUp)) RemovePressedKey(Keys::RightButton);
+	if (args.ButtonFlags & static_cast<int32>(MouseFlags::MiddleButtonDown)) AddPressedKey(Keys::MiddleButton);
+	if (args.ButtonFlags & static_cast<int32>(MouseFlags::MiddleButtonUp)) RemovePressedKey(Keys::MiddleButton);
 
 	POINT p;
 	GetCursorPos(&p);

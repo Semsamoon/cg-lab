@@ -19,7 +19,8 @@ View::Window::~Window()
 }
 
 void View::Window::InitializeWindowClass(
-	LRESULT(*windowProcedure) (HWND hWindow, UINT umessage, WPARAM wparam, LPARAM lparam)) {
+	LRESULT(*windowProcedure) (HWND hWindow, UINT umessage, WPARAM wparam, LPARAM lparam))
+{
 	windowClass_.style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
 	windowClass_.lpfnWndProc = windowProcedure;
 	windowClass_.cbClsExtra = 0;

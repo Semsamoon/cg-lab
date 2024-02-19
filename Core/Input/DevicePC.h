@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Device.h"
+#include "../../Lib/Types.h"
 
 namespace Core
 {
@@ -16,6 +17,11 @@ namespace Core
 		private:
 			void InitializeMouse(RAWINPUTDEVICE* device);
 			void InitializeKeyboard(RAWINPUTDEVICE* device);
+
+			static uint32 SizeRawInput(LPARAM lparam);
+			static RAWINPUT* ReadRawInput(uint32 size, LPARAM lparam);
+			static void ProcessKeyboard(RAWINPUT* rawInput, DevicePC* device);
+			static void ProcessMouse(RAWINPUT* rawInput, DevicePC* device);
 		};
 	}
 }
