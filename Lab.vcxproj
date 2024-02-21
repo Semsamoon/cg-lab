@@ -27,6 +27,10 @@
     <ClInclude Include="Core\Structs\Delegates.h" />
     <ClInclude Include="Core\Structs\TimeAccumulator.h" />
     <ClInclude Include="Lib\Types.h" />
+    <ClInclude Include="View\Objects\Figure.h" />
+    <ClInclude Include="View\Objects\Square.h" />
+    <ClInclude Include="View\Render.h" />
+    <ClInclude Include="View\Renderable.h" />
     <ClInclude Include="View\Window.h" />
   </ItemGroup>
   <ItemGroup>
@@ -38,7 +42,15 @@
     <ClCompile Include="Startup.cpp">
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
     </ClCompile>
+    <ClCompile Include="View\Objects\Figure.cpp" />
+    <ClCompile Include="View\Objects\Square.cpp" />
+    <ClCompile Include="View\Render.cpp" />
     <ClCompile Include="View\Window.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Shaders\Shader.hlsl">
+      <FileType>Document</FileType>
+    </Text>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>

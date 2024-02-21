@@ -4,22 +4,32 @@
 
 #include "Structs/TimeAccumulator.h"
 #include "Input/DevicePC.h"
+#include "../View/Window.h"
 
 Core::Game::Game(LPCWSTR name) : isFinished_(false)
 {
 	window_ = new View::Window(name, Input::DevicePC::InputWindowProcedure, 800, 800);
 	inputDevice_ = new Input::DevicePC(window_->HandlerWindow());
+	render_ = new View::Render(800, 800, window_->HandlerWindow());
+	renderables_ = std::vector<View::Renderable*>();
 }
 
 Core::Game::~Game()
 {
 	delete window_;
 	delete inputDevice_;
+	renderables_.clear();
+}
+
+void Core::Game::Add(View::Renderable* renderable)
+{
+	renderables_.push_back(renderable);
 }
 
 void Core::Game::Run()
 {
 	Structs::TimeAccumulator time;
+	Initialize();
 
 	while (!isFinished_) {
 		time.Update();
@@ -29,8 +39,13 @@ void Core::Game::Run()
 			time.Accumulated(time.Accumulated() - time.Delta());
 		}
 		Update();
-		Render();
+		RenderUpdate();
 	}
+}
+
+void Core::Game::Initialize()
+{
+	for (auto* renderable : renderables_) renderable->Initialize(render_);
 }
 
 void Core::Game::Input()
@@ -59,6 +74,9 @@ void Core::Game::Update()
 {
 }
 
-void Core::Game::Render()
+void Core::Game::RenderUpdate()
 {
+	render_->PreRenderUpdate();
+	for (auto* renderable : renderables_) renderable->Render();
+	render_->PostRenderUpdate();
 }

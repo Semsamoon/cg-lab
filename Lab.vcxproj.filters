@@ -42,6 +42,18 @@
     <ClInclude Include="Core\Structs\TimeAccumulator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="View\Render.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="View\Renderable.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="View\Objects\Figure.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="View\Objects\Square.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Core\Game.cpp">
@@ -65,5 +77,19 @@
     <ClCompile Include="Core\Structs\TimeAccumulator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="View\Render.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="View\Objects\Figure.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="View\Objects\Square.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Shaders\Shader.hlsl">
+      <Filter>Resource Files</Filter>
+    </Text>
   </ItemGroup>
 </Project>
