@@ -89,7 +89,7 @@ void View::Objects::Figure::CreateRasterizerState()
 {
 	CD3D11_RASTERIZER_DESC rastDesc = {};
 	rastDesc.CullMode = D3D11_CULL_NONE;
-	rastDesc.FillMode = D3D11_FILL_WIREFRAME;
+	rastDesc.FillMode = D3D11_FILL_SOLID;
 
 	render_->DeviceDirect3D11()->CreateRasterizerState(
 		&rastDesc, &rasterizerState_);

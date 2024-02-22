@@ -7,7 +7,7 @@
 
 #pragma comment(lib, "d3dcompiler.lib")
 
-View::Objects::Square::Square(Core::Math::Vector2F center, Core::Math::Vector2F halfSize, ID3D11RasterizerState* rs)
+View::Objects::Square::Square(Core::Math::Vector2F center, Core::Math::Vector2F halfSize)
 {
 	pointsSquare_[0] = DirectX::XMFLOAT4(center.X + halfSize.X, center.Y + halfSize.Y, 0.5f, 1.0f);
 	pointsSquare_[1] = DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f);
@@ -26,7 +26,6 @@ View::Objects::Square::Square(Core::Math::Vector2F center, Core::Math::Vector2F 
 	indicesSquare_[4] = 0;
 	indicesSquare_[5] = 3;
 	indices_ = indicesSquare_;
-	rasterizerState_ = rs;
 }
 
 void View::Objects::Square::Initialize(View::Render* render)
@@ -42,7 +41,7 @@ void View::Objects::Square::Initialize(View::Render* render)
 	CreateLayout();
 	CreateVertexBuffer(4 * 2);
 	CreateIndexBuffer(3 * 2);
-	//CreateRasterizerState();
+	CreateRasterizerState();
 
 	render_->DeviceDirect3D11Context().RSSetState(rasterizerState_);
 }
@@ -63,5 +62,4 @@ void View::Objects::Square::Render()
 	context.PSSetShader(pixelShader_, nullptr, 0);
 
 	context.DrawIndexed(6, 0, 0);
-	//render_->SetRenderTargets(0, true);
 }

@@ -10,7 +10,7 @@ namespace View
 		class Square final : public Figure
 		{
 		public:
-			Square(Core::Math::Vector2F center, Core::Math::Vector2F size, ID3D11RasterizerState* rs);
+			Square(Core::Math::Vector2F center, Core::Math::Vector2F size);
 
 			virtual void Initialize(View::Render* render) override;
 			virtual void Render() override;
