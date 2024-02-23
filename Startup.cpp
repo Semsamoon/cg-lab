@@ -1,18 +1,13 @@
-#include <windows.h>
-#include <iostream>
-
-#include "Core/Game.h"
-#include "View/Objects/Square.h"
+#include "Game.h"
+#include "Basic/Shapes/Square.h"
 
 int main()
 {
-	auto* game = new Core::Game(L"Game");
-	auto* square1 = new View::Objects::Square(
-		Core::Math::Vector2F(-0.5f, 0), Core::Math::Vector2F(0.5f, 0.5f));
-	auto* square2 = new View::Objects::Square(
-		Core::Math::Vector2F(0.5f, 0), Core::Math::Vector2F(0.5f, 0.5f));
-	game->Add(square2);
-	game->Add(square1);
-
-	game->Run();
+    auto* game = Game::Instance();
+    auto* square1 = new Basic::Shapes::Square(float2(-0.5f, 0), float2(0.25f, 0.25f));
+    auto* square2 = new Basic::Shapes::Square(float2(0.5f, 0), float2(0.25f, 0.25f));
+    game->Compose(L"Game");
+    game->GetRenderPipeline()->Add(square2);
+    game->GetRenderPipeline()->Add(square1);
+    game->Run();
 }
