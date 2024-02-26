@@ -11,7 +11,7 @@ void Rendering::Compose(Engine::Render::Pipeline* pPipeline)
     pPipeline_ = pPipeline;
 }
 
-void Rendering::Render()
+void Rendering::Render(float delta)
 {
     auto* context = pPipeline_->GetDeviceContext();
     context->RSSetState(pRasterizerState_);

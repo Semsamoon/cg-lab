@@ -17,7 +17,7 @@ void Pipeline::Compose(PHandlerWindow pHandlerWindow, const Point& size)
     ComposeRenderTargetView();
 }
 
-void Pipeline::Render() const
+void Pipeline::Render(float delta) const
 {
     pDeviceContext_->ClearState();
     pDeviceContext_->OMSetRenderTargets(1, &pRenderTargetView_, nullptr);
@@ -27,7 +27,7 @@ void Pipeline::Render() const
     for (auto* pRenderAble : renderAbles_)
     {
         pDeviceContext_->OMSetRenderTargets(1, &pRenderTargetView_, nullptr);
-        pRenderAble->Render();
+        pRenderAble->Render(delta);
     }
     pSwapChain_->Present(1, DXGI_PRESENT_DO_NOT_WAIT);
 }

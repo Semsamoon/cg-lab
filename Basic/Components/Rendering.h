@@ -11,7 +11,7 @@ namespace Basic
         {
         public:
             void Compose(Engine::Render::Pipeline* pPipeline) override;
-            void Render() override;
+            void Render(float delta) override;
 
             Engine::Render::Pipeline* GetPipeline() const { return pPipeline_; }
 

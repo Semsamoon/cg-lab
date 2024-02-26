@@ -17,7 +17,7 @@ namespace Engine
         {
         public:
             void Compose(PHandlerWindow pHandlerWindow, const Point& size);
-            void Render() const;
+            void Render(float delta) const;
             void Destroy() const;
 
             void Add(Able* pRenderAble);

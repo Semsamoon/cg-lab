@@ -12,7 +12,7 @@ namespace Engine
             virtual ~Able() = default;
 
             virtual void Compose(Pipeline* pPipeline) {}
-            virtual void Render() {}
+            virtual void Render(float delta) {}
         };
     }
 }
