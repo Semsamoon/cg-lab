@@ -14,10 +14,6 @@ namespace Engine
         class Device
         {
         public:
-            Device() : pHandlerWindow_()
-            {
-            }
-
             virtual ~Device() = default;
 
             virtual void Compose(PHandlerWindow pHandlerWindow);
@@ -35,7 +31,7 @@ namespace Engine
             void RemovePressedKey(Keyboard::Keys key);
 
             std::unordered_set<Keyboard::Keys> pKeys_{};
-            PHandlerWindow pHandlerWindow_;
+            PHandlerWindow pHandlerWindow_ = nullptr;
         };
     }
 }

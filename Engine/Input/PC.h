@@ -9,10 +9,6 @@ namespace Engine
         class PC final : public Device
         {
         public:
-            PC() : Device()
-            {
-            }
-
             void Compose(PHandlerWindow pHandlerWindow) override;
             PInt64 CALLBACK HandleInput(
                 PHandlerWindow pHandlerWindow, uint32 message, PUint64 pUintParam, PInt64 pIntParam) override;

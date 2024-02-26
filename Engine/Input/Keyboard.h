@@ -116,10 +116,10 @@ namespace Engine
                 Divide = 111,
 
                 // Arrows
-                Left = 37,
-                Up = 38,
-                Right = 39,
-                Down = 40,
+                LeftArrow = 37,
+                UpArrow = 38,
+                RightArrow = 39,
+                DownArrow = 40,
 
                 // Supports
                 LeftWindows = 91,

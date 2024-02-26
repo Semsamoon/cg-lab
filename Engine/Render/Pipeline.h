@@ -16,15 +16,11 @@ namespace Engine
         class Pipeline final
         {
         public:
-            Pipeline() : size_(), viewport_(), pDeviceContext_(), pSwapChain_(), pRenderTargetView_()
-            {
-            }
-
             void Compose(PHandlerWindow pHandlerWindow, const Point& size);
             void Render() const;
             void Destroy() const;
 
-            void Add(Able* renderAble);
+            void Add(Able* pRenderAble);
 
             DXDevice* GetDevice() const { return pDevice_.Get(); }
             DXDeviceContext* GetDeviceContext() const { return pDeviceContext_; }
@@ -33,12 +29,12 @@ namespace Engine
             void ComposeDeviceAndSwapChain(PHandlerWindow pHandlerWindow);
             void ComposeRenderTargetView();
 
-            Point size_;
-            DXViewport viewport_;
+            Point size_{};
+            DXViewport viewport_{};
             Microsoft::WRL::ComPtr<DXDevice> pDevice_;
-            DXDeviceContext* pDeviceContext_;
-            DXSwapChain* pSwapChain_;
-            DXRenderTargetView* pRenderTargetView_;
+            DXDeviceContext* pDeviceContext_ = nullptr;
+            DXSwapChain* pSwapChain_ = nullptr;
+            DXRenderTargetView* pRenderTargetView_ = nullptr;
             std::vector<Able*> renderAbles_{};
         };
     }

@@ -1,6 +1,13 @@
 #include "TimeAccumulator.h"
 
-void Lib::TimeAccumulator::Update()
+using namespace Lib;
+
+void TimeAccumulator::Compose()
+{
+    current_ = std::chrono::system_clock::now();
+}
+
+void TimeAccumulator::Update()
 {
     const auto current = std::chrono::system_clock::now();
     delta_ = std::chrono::duration<double>(current - current_).count();

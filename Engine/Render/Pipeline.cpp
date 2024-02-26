@@ -15,7 +15,6 @@ void Pipeline::Compose(PHandlerWindow pHandlerWindow, const Point& size)
     viewport_.MaxDepth = 1.0f;
     ComposeDeviceAndSwapChain(pHandlerWindow);
     ComposeRenderTargetView();
-    for (auto* renderAble : renderAbles_) renderAble->Compose(this);
 }
 
 void Pipeline::Render() const
@@ -25,10 +24,10 @@ void Pipeline::Render() const
     constexpr float color[] = {0.0f, 0.0f, 0.0f, 1.0f};
     pDeviceContext_->ClearRenderTargetView(pRenderTargetView_, color);
     pDeviceContext_->RSSetViewports(1, &viewport_);
-    for (auto* renderAble : renderAbles_)
+    for (auto* pRenderAble : renderAbles_)
     {
         pDeviceContext_->OMSetRenderTargets(1, &pRenderTargetView_, nullptr);
-        renderAble->Render();
+        pRenderAble->Render();
     }
     pSwapChain_->Present(1, DXGI_PRESENT_DO_NOT_WAIT);
 }
@@ -41,10 +40,10 @@ void Pipeline::Destroy() const
     pDevice_->Release();
 }
 
-void Pipeline::Add(Able* renderAble)
+void Pipeline::Add(Able* pRenderAble)
 {
-    renderAbles_.push_back(renderAble);
-    renderAble->Compose(this);
+    renderAbles_.push_back(pRenderAble);
+    pRenderAble->Compose(this);
 }
 
 void Pipeline::ComposeDeviceAndSwapChain(PHandlerWindow pHandlerWindow)

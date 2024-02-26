@@ -2,6 +2,8 @@
 
 #include <d3dcompiler.h>
 
+#include "../../Engine/Render/Pipeline.h"
+
 using namespace Basic::Components;
 
 void Rendering::Compose(Engine::Render::Pipeline* pPipeline)

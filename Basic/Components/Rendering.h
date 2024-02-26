@@ -2,7 +2,6 @@
 
 #include "../../Lib/Types.h"
 #include "../../Engine/Render/Able.h"
-#include "../../Engine/Render/Pipeline.h"
 
 namespace Basic
 {
@@ -11,15 +10,10 @@ namespace Basic
         class Rendering : public Engine::Render::Able
         {
         public:
-            Rendering()
-                : pPipeline_(), pVertexShaderByteCode_(), pPixelShaderByteCode_(), pVertexShader_(), pPixelShader_(),
-                  pInputLayout_(), pPoints_(), pIndices_(), pVertexBuffer_(), pIndexBuffer_(), pRasterizerState_(),
-                  indicesAmount_(0)
-            {
-            }
-
             void Compose(Engine::Render::Pipeline* pPipeline) override;
             void Render() override;
+
+            Engine::Render::Pipeline* GetPipeline() const { return pPipeline_; }
 
         protected:
             void CreateVertexShader(const char16* pPath, const DXShaderMacros* pDefines, DXIncludes* pIncludes);
@@ -29,18 +23,18 @@ namespace Basic
             void CreateIndexBuffer(uint32 indicesAmount);
             void CreateRasterizerState();
 
-            Engine::Render::Pipeline* pPipeline_;
-            DXBlob* pVertexShaderByteCode_;
-            DXBlob* pPixelShaderByteCode_;
-            DXVertexShader* pVertexShader_;
-            DXPixelShader* pPixelShader_;
-            DXInputLayout* pInputLayout_;
-            float4* pPoints_;
-            int32* pIndices_;
-            DXBuffer* pVertexBuffer_;
-            DXBuffer* pIndexBuffer_;
-            DXRasterizerState* pRasterizerState_;
-            int32 indicesAmount_;
+            Engine::Render::Pipeline* pPipeline_ = nullptr;
+            DXBlob* pVertexShaderByteCode_ = nullptr;
+            DXBlob* pPixelShaderByteCode_ = nullptr;
+            DXVertexShader* pVertexShader_ = nullptr;
+            DXPixelShader* pPixelShader_ = nullptr;
+            DXInputLayout* pInputLayout_ = nullptr;
+            float4* pPoints_ = nullptr;
+            int32* pIndices_ = nullptr;
+            DXBuffer* pVertexBuffer_ = nullptr;
+            DXBuffer* pIndexBuffer_ = nullptr;
+            DXRasterizerState* pRasterizerState_ = nullptr;
+            int32 indicesAmount_ = 0;
         };
     }
 }

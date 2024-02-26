@@ -6,14 +6,13 @@ namespace Basic
 {
     namespace Shapes
     {
-        class Square final : public Components::Rendering
+        class Square : public Components::Rendering
         {
         public:
-            Square(const float2& center, const float2& halfSize);
-
+            void Compose(const float2& center, const float2& size);
             void Compose(Engine::Render::Pipeline* pPipeline) override;
 
-        private:
+        protected:
             float4 pointsSquare_[4 * 2]{};
             int32 indicesSquare_[3 * 2]{};
         };
