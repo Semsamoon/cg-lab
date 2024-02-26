@@ -25,13 +25,26 @@
     <ClInclude Include="Engine\Input\Keyboard.h" />
     <ClInclude Include="Engine\Input\Mouse.h" />
     <ClInclude Include="Engine\Input\PC.h" />
+    <ClInclude Include="Engine\Physics\CollideAble.h" />
+    <ClInclude Include="Engine\Physics\Collide.h" />
+    <ClInclude Include="Engine\Physics\Move.h" />
+    <ClInclude Include="Engine\Physics\MoveAble.h" />
     <ClInclude Include="Engine\Render\Pipeline.h" />
     <ClInclude Include="Engine\Render\Able.h" />
     <ClInclude Include="Engine\Render\Window.h" />
+    <ClInclude Include="Engine\Update\Fixed.h" />
+    <ClInclude Include="Engine\Update\FixedAble.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="Lib\Delegates.h" />
     <ClInclude Include="Lib\TimeAccumulator.h" />
     <ClInclude Include="Lib\Types.h" />
+    <ClInclude Include="Pong\Ball.h" />
+    <ClInclude Include="Pong\Counter.h" />
+    <ClInclude Include="Pong\ShaderData.h" />
+    <ClInclude Include="Pong\Stick.h" />
+    <ClInclude Include="Pong\StickAI.h" />
+    <ClInclude Include="Pong\StickPlayer.h" />
+    <ClInclude Include="Pong\Wall.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Basic\Components\Rendering.cpp">
@@ -332,6 +345,8 @@
       <SDLCheck>true</SDLCheck>
       <LinkCompiled>true</LinkCompiled>
     </ClCompile>
+    <ClCompile Include="Engine\Physics\Collide.cpp" />
+    <ClCompile Include="Engine\Physics\Move.cpp" />
     <ClCompile Include="Engine\Render\Pipeline.cpp">
       <RuntimeLibrary>MultiThreadedDebugDll</RuntimeLibrary>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -482,6 +497,7 @@
       <LinkCompiled>true</LinkCompiled>
       <AdditionalIncludeDirectories>D:\Education\projects\2 Computer Graphics\Lab\packages\directxtk_uwp.2024.1.1.1\build\native\..\..\include;</AdditionalIncludeDirectories>
     </ClCompile>
+    <ClCompile Include="Engine\Update\Fixed.cpp" />
     <ClCompile Include="Game.cpp">
       <RuntimeLibrary>MultiThreadedDebugDll</RuntimeLibrary>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -705,6 +721,12 @@
       <SDLCheck>true</SDLCheck>
       <LinkCompiled>true</LinkCompiled>
     </ClCompile>
+    <ClCompile Include="Pong\Ball.cpp" />
+    <ClCompile Include="Pong\Counter.cpp" />
+    <ClCompile Include="Pong\Stick.cpp" />
+    <ClCompile Include="Pong\StickAI.cpp" />
+    <ClCompile Include="Pong\StickPlayer.cpp" />
+    <ClCompile Include="Pong\Wall.cpp" />
     <ClCompile Include="Startup.cpp">
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
     </ClCompile>
