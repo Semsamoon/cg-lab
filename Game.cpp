@@ -2,7 +2,6 @@
 
 #include <chrono>
 
-#include "Lib/TimeAccumulator.h"
 #include "Engine/Input/Keyboard.h"
 
 using namespace Engine;
@@ -13,27 +12,23 @@ Game* Game::Instance()
     return instance;
 }
 
-void Game::Compose(const char16* pName) const
+void Game::Compose(const char16* pName, float fixedDelta) const
 {
-    constexpr Point size = {800, 800};
+    constexpr Point size = {1200, 800};
     window_->Compose(pName, size);
     inputDevice_->Compose(window_->GetHandlerWindow());
     pipeline_->Compose(window_->GetHandlerWindow(), size);
+    fixedUpdate_->Compose(fixedDelta);
+    fixedUpdate_->Add(physicsMove_);
+    fixedUpdate_->Add(physicsCollide_);
 }
 
 void Game::Run()
 {
-    Lib::TimeAccumulator time;
-
     while (!isFinished_)
     {
-        time.Update();
         Input();
-        while (time.Accumulated() > 0.1)
-        {
-            FixedUpdate();
-            time.Accumulated(time.Accumulated() - time.Delta());
-        }
+        fixedUpdate_->Update();
         Update();
         pipeline_->Render();
     }
@@ -41,6 +36,12 @@ void Game::Run()
 
 void Game::Destroy() const
 {
+    pipeline_->Destroy();
+    inputDevice_->Destroy();
+    window_->Destroy();
+    delete physicsMove_;
+    delete physicsCollide_;
+    delete fixedUpdate_;
     delete pipeline_;
     delete inputDevice_;
     delete window_;
@@ -58,10 +59,6 @@ void Game::Input()
 
     if (msg.message == WM_QUIT) isFinished_ = true;
     if (inputDevice_->IsKeyDown(Input::Keyboard::Keys::Escape)) isFinished_ = true;
-}
-
-void Game::FixedUpdate()
-{
 }
 
 void Game::Update()

@@ -3,8 +3,8 @@
 #include <cstdint>
 #include <d3d11.h>
 #include <windows.h>
-
-#include "SimpleMath.h"
+#include <SimpleMath.h>
+#include <DirectXCollision.h>
 
 typedef char int8;
 typedef int16_t int16;
@@ -27,6 +27,9 @@ typedef DirectX::SimpleMath::Vector4 float4;
 
 typedef POINT Point;
 typedef RECT Rect;
+
+typedef DirectX::SimpleMath::Rectangle DXRect;
+typedef DirectX::BoundingBox DXBox;
 
 typedef HINSTANCE PHandlerInstance;
 typedef HWND PHandlerWindow;
