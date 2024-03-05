@@ -14,3 +14,13 @@ void TimeAccumulator::Update()
     current_ = current;
     accumulated_ += delta_;
 }
+
+double& TimeAccumulator::accumulated()
+{
+    return accumulated_;
+}
+
+double TimeAccumulator::delta() const
+{
+    return delta_;
+}

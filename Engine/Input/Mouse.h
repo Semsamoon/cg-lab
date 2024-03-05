@@ -2,11 +2,11 @@
 
 #include "../../Lib/Types.h"
 
-namespace Engine
+namespace engine
 {
-    namespace Input
+    namespace input
     {
-        namespace Mouse
+        namespace mouse
         {
             enum struct Buttons : uint16
             {
@@ -21,16 +21,16 @@ namespace Engine
 
             struct Event
             {
-                Point Position;
-                Point Translation;
-                uint16 WheelDelta;
+                Point position;
+                Point translation;
+                uint16 wheel_delta;
 
-                Event() : Position(), Translation(), WheelDelta(0)
+                Event() : position(), translation(), wheel_delta(0)
                 {
                 }
 
-                Event(const Point& position, const Point& translation, uint16 wheelDelta)
-                    : Position(position), Translation(translation), WheelDelta(wheelDelta)
+                Event(const Point& position, const Point& translation, uint16 wheel_delta)
+                    : position(position), translation(translation), wheel_delta(wheel_delta)
                 {
                 }
             };

@@ -7,31 +7,31 @@
 #include "Keyboard.h"
 #include "Mouse.h"
 
-namespace Engine
+namespace engine
 {
-    namespace Input
+    namespace input
     {
         class Device
         {
         public:
             virtual ~Device() = default;
 
-            virtual void Compose(PHandlerWindow pHandlerWindow);
-            virtual PInt64 CALLBACK HandleInput(
-                PHandlerWindow pHandlerWindow, uint32 message, PUint64 pUintParam, PInt64 pIntParam) = 0;
+            virtual void Compose(PHandlerWindow handler_window);
+            virtual pInt64 CALLBACK HandleInput(
+                PHandlerWindow handler_window, uint32 message, pUint64 uint_param, pInt64 int_param) = 0;
             virtual void Destroy() = 0;
 
-            bool IsKeyDown(Keyboard::Keys key) const;
-            Lib::MulticastDelegate<const Mouse::Event&> MouseEvent;
-            Lib::MulticastDelegate<const Keyboard::Event&> KeyboardEvent;
+            bool IsKeyDown(keyboard::Keys key) const;
+            Lib::MulticastDelegate<const mouse::Event&> mouse_event;
+            Lib::MulticastDelegate<const keyboard::Event&> keyboard_event;
 
         protected:
-            void UpdateMouseMovement(const Point& translation, uint16 wheelDelta);
-            void AddPressedKey(Keyboard::Keys key);
-            void RemovePressedKey(Keyboard::Keys key);
+            void UpdateMouseMovement(const Point& translation, uint16 wheel_delta);
+            void AddPressedKey(keyboard::Keys key);
+            void RemovePressedKey(keyboard::Keys key);
 
-            std::unordered_set<Keyboard::Keys> pKeys_{};
-            PHandlerWindow pHandlerWindow_ = nullptr;
+            std::unordered_set<keyboard::Keys> keys_{};
+            PHandlerWindow handler_window_ = nullptr;
         };
     }
 }

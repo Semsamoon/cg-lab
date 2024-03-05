@@ -2,11 +2,11 @@
 
 #include "../../Lib/Types.h"
 
-namespace Engine
+namespace engine
 {
-    namespace Input
+    namespace input
     {
-        namespace Keyboard
+        namespace keyboard
         {
             enum struct Buttons : uint16
             {
@@ -141,14 +141,14 @@ namespace Engine
 
             struct Event
             {
-                Keys Code;
-                Buttons Button;
+                Keys code;
+                Buttons button;
 
-                Event() : Code(Keys::None), Button(Buttons::None)
+                Event() : code(Keys::None), button(Buttons::None)
                 {
                 }
 
-                Event(Keys code, Buttons button) : Code(code), Button(button)
+                Event(Keys code, Buttons button) : code(code), button(button)
                 {
                 }
             };

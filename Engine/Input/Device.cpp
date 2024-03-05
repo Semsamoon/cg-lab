@@ -1,36 +1,36 @@
 #include "Device.h"
 
-using namespace Engine::Input;
+using namespace engine::input;
 
-void Device::Compose(PHandlerWindow pHandlerWindow)
+void Device::Compose(PHandlerWindow handler_window)
 {
-    pHandlerWindow_ = pHandlerWindow;
+    handler_window_ = handler_window;
 }
 
-bool Device::IsKeyDown(const Keyboard::Keys key) const
+bool Device::IsKeyDown(const keyboard::Keys key) const
 {
-    return pKeys_.count(key) != 0;
+    return keys_.count(key) != 0;
 }
 
-void Device::UpdateMouseMovement(const Point& translation, uint16 wheelDelta)
+void Device::UpdateMouseMovement(const Point& translation, uint16 wheel_delta)
 {
     Point position;
     GetCursorPos(&position);
-    ScreenToClient(pHandlerWindow_, &position);
-    const Mouse::Event event = {position, translation, wheelDelta};
-    MouseEvent.Broadcast(event);
+    ScreenToClient(handler_window_, &position);
+    const mouse::Event event = {position, translation, wheel_delta};
+    mouse_event.Broadcast(event);
 }
 
-void Device::AddPressedKey(Keyboard::Keys key)
+void Device::AddPressedKey(keyboard::Keys key)
 {
-    pKeys_.insert(key);
-    const Keyboard::Event event = {key, Keyboard::Buttons::Down};
-    KeyboardEvent.Broadcast(event);
+    keys_.insert(key);
+    const keyboard::Event event = {key, keyboard::Buttons::Down};
+    keyboard_event.Broadcast(event);
 }
 
-void Device::RemovePressedKey(Keyboard::Keys key)
+void Device::RemovePressedKey(keyboard::Keys key)
 {
-    pKeys_.erase(key);
-    const Keyboard::Event event = {key, Keyboard::Buttons::Up};
-    KeyboardEvent.Broadcast(event);
+    keys_.erase(key);
+    const keyboard::Event event = {key, keyboard::Buttons::Up};
+    keyboard_event.Broadcast(event);
 }

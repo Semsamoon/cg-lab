@@ -1,5 +1,4 @@
 #pragma once
-
 #include <chrono>
 
 namespace Lib
@@ -10,9 +9,8 @@ namespace Lib
         void Compose();
         void Update();
 
-        double GetAccumulated() const { return accumulated_; }
-        void SetAccumulated(double value) { accumulated_ = value; }
-        double GetDelta() const { return delta_; }
+        double& accumulated();
+        double delta() const;
 
     private:
         std::chrono::system_clock::time_point current_;
