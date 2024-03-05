@@ -1,0 +1,42 @@
+﻿#pragma once
+
+#include "../../Lib/Types.h"
+#include "../Transform/TransformComponent.h"
+
+namespace engine
+{
+    namespace graphics
+    {
+        struct CameraPerspectiveParams
+        {
+            float field_of_view;
+            float aspect_ratio;
+            float near_z;
+            float far_z;
+        };
+
+        class Camera final
+        {
+        public:
+            Camera();
+
+            void Compose();
+            void Compose(transform::TransformComponent* transform);
+            void UpdateViewMatrix();
+            void UpdateProjectionMatrix();
+
+            CameraPerspectiveParams& perspective_params();
+
+            float4x4& view_matrix();
+            float4x4& projection_matrix();
+
+        private:
+            transform::TransformComponent* transform_ = nullptr;
+
+            CameraPerspectiveParams perspective_params_{};
+
+            float4x4 view_matrix_;
+            float4x4 projection_matrix_;
+        };
+    }
+}
