@@ -4,7 +4,7 @@
 
 #include "Engine/Input/Keyboard.h"
 
-using namespace Engine;
+using namespace engine;
 
 Game* Game::Instance()
 {
@@ -12,39 +12,56 @@ Game* Game::Instance()
     return instance;
 }
 
-void Game::Compose(const char16* pName, float fixedDelta) const
+void Game::Compose(const char16* name, Point size, float fixed_delta, graphics::Camera* camera)
 {
-    constexpr Point size = {1200, 800};
-    window_->Compose(pName, size);
-    inputDevice_->Compose(window_->GetHandlerWindow());
-    pipeline_->Compose(window_->GetHandlerWindow(), size);
-    fixedUpdate_->Compose(fixedDelta);
-    fixedUpdate_->Add(physicsMove_);
-    fixedUpdate_->Add(physicsCollide_);
+    window_->Compose(name, size);
+    input_device_->Compose(window_->handler_window());
+    pipeline_->Compose(window_->handler_window(), size);
+    fixed_update_->Compose(fixed_delta);
+    variable_update_->Compose(fixed_update_);
+
+    fixed_update_->Add(physics_movement_);
+    fixed_update_->Add(physics_collision_);
+
+    camera_ = camera;
 }
 
 void Game::Run()
 {
-    while (!isFinished_)
+    while (!is_finished_)
     {
         Input();
-        fixedUpdate_->Update();
-        Update();
-        pipeline_->Render(static_cast<float>(fixedUpdate_->GetTimer().GetDelta()));
+        fixed_update_->Update();
+        variable_update_->Update();
+        pipeline_->Render(
+            camera_->view_matrix() * camera_->projection_matrix(),
+            static_cast<float>(fixed_update_->timer().delta()));
     }
 }
 
 void Game::Destroy() const
 {
     pipeline_->Destroy();
-    inputDevice_->Destroy();
+    input_device_->Destroy();
     window_->Destroy();
-    delete physicsMove_;
-    delete physicsCollide_;
-    delete fixedUpdate_;
+    delete camera_;
+    delete physics_movement_;
+    delete physics_collision_;
+    delete variable_update_;
+    delete fixed_update_;
     delete pipeline_;
-    delete inputDevice_;
+    delete input_device_;
     delete window_;
+}
+
+update::VariableUpdate* Game::variable_update() const
+{
+    return variable_update_;
+}
+
+graphics::Camera* Game::camera() const
+{
+    return camera_;
 }
 
 void Game::Input()
@@ -57,10 +74,6 @@ void Game::Input()
         DispatchMessage(&msg);
     }
 
-    if (msg.message == WM_QUIT) isFinished_ = true;
-    if (inputDevice_->IsKeyDown(Input::Keyboard::Keys::Escape)) isFinished_ = true;
-}
-
-void Game::Update()
-{
+    if (msg.message == WM_QUIT) is_finished_ = true;
+    if (input_device_->IsKeyDown(input::keyboard::Keys::Escape)) is_finished_ = true;
 }
