@@ -15,6 +15,14 @@ namespace engine
             float far_z;
         };
 
+        struct CameraOrthographicParams
+        {
+            float width;
+            float height;
+            float near_z;
+            float far_z;
+        };
+
         class Camera final
         {
         public:
@@ -23,20 +31,27 @@ namespace engine
             void Compose();
             void Compose(transform::TransformComponent* transform);
             void UpdateViewMatrix();
-            void UpdateProjectionMatrix();
+            void UpdateProjectionMatrixPerspective();
+            void UpdateProjectionMatrixOrthographic();
 
             CameraPerspectiveParams& perspective_params();
+            CameraOrthographicParams& orthographic_params();
 
             float4x4& view_matrix();
             float4x4& projection_matrix();
+
+            bool is_perspective() const;
 
         private:
             transform::TransformComponent* transform_ = nullptr;
 
             CameraPerspectiveParams perspective_params_{};
+            CameraOrthographicParams orthographic_params_{};
 
             float4x4 view_matrix_;
             float4x4 projection_matrix_;
+
+            bool is_perspective_;
         };
     }
 }

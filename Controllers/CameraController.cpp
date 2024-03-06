@@ -9,6 +9,7 @@ void CameraController::Compose(objects::CameraObject* camera_object, engine::inp
     camera_object_ = camera_object;
     device_ = device;
     device_->mouse_event.AddRaw(this, &CameraController::OnMouseEvent);
+    device_->keyboard_event.AddRaw(this, &CameraController::OnKeyboardEvent);
 }
 
 void CameraController::Update(float delta)
@@ -34,8 +35,16 @@ void CameraController::OnMouseEvent(const engine::input::mouse::Event& args) con
 {
     if (device_->IsKeyDown(engine::input::keyboard::Keys::LeftShift)) return;
     auto* transform = camera_object_->transform();
-    transform->rotation().x += args.translation.y * -0.003f;
-    transform->rotation().y += args.translation.x * -0.003f;
+    transform->rotation().x += static_cast<float>(args.translation.y) * -0.003f;
+    transform->rotation().y += static_cast<float>(args.translation.x) * -0.003f;
     transform->UpdateWorldMatrix();
     camera_object_->camera()->UpdateViewMatrix();
+}
+
+void CameraController::OnKeyboardEvent(const engine::input::keyboard::Event& args) const
+{
+    if (args.code != engine::input::keyboard::Keys::Tab || args.button != engine::input::keyboard::Buttons::Down)
+        return;
+    if (camera_object_->camera()->is_perspective()) camera_object_->camera()->UpdateProjectionMatrixOrthographic();
+    else camera_object_->camera()->UpdateProjectionMatrixPerspective();
 }

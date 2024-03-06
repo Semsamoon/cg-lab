@@ -14,6 +14,7 @@ namespace controllers
 
     private:
         void OnMouseEvent(const engine::input::mouse::Event& args) const;
+        void OnKeyboardEvent(const engine::input::keyboard::Event& args) const;
 
         objects::CameraObject* camera_object_ = nullptr;
         engine::input::Device* device_ = nullptr;
