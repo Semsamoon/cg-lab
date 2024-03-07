@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include "../Engine/Transform/TransformComponent.h"
 #include "../Engine/Update/VariableUpdateAble.h"
+#include "../Objects/PlanetObject.h"
 
 namespace controllers
 {
@@ -8,7 +9,7 @@ namespace controllers
     {
     public:
         void Compose(
-            engine::transform::TransformComponent* transform,
+            objects::PlanetObject* planet,
             engine::transform::TransformComponent* transform_rotation_center);
         void SetSpeed(
             const float3& offset, const float3& axis_around_center, float speed_around_center,
@@ -19,6 +20,7 @@ namespace controllers
         void UpdateAroundCenter(float delta);
         void UpdateSelf(float delta) const;
 
+        objects::PlanetObject* planet_ = nullptr;
         engine::transform::TransformComponent* transform_ = nullptr;
         engine::transform::TransformComponent* transform_rotation_center_ = nullptr;
 

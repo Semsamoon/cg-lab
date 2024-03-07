@@ -3,9 +3,10 @@
 using namespace controllers;
 
 void PlanetController::Compose(
-    engine::transform::TransformComponent* transform, engine::transform::TransformComponent* transform_rotation_center)
+    objects::PlanetObject* planet, engine::transform::TransformComponent* transform_rotation_center)
 {
-    transform_ = transform;
+    planet_ = planet;
+    transform_ = planet->transform();
     transform_rotation_center_ = transform_rotation_center;
 }
 
@@ -24,6 +25,7 @@ void PlanetController::Update(float delta)
 {
     if (transform_rotation_center_ != nullptr) UpdateAroundCenter(delta);
     UpdateSelf(delta);
+    planet_->bounding_box().Center = transform_->position();
     transform_->UpdateWorldMatrix();
 }
 
