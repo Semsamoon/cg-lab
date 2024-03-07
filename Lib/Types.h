@@ -34,6 +34,7 @@ typedef RECT Rect;
 
 typedef DirectX::SimpleMath::Rectangle DXRect;
 typedef DirectX::BoundingBox DXBox;
+typedef DirectX::SimpleMath::Ray DXRay;
 
 typedef HINSTANCE PHandlerInstance;
 typedef HWND PHandlerWindow;
