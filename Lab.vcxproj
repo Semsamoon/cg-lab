@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Components\CubeComponent.h" />
+    <ClInclude Include="Components\SphereComponent.h" />
     <ClInclude Include="Components\SquareComponent.h" />
     <ClInclude Include="Controllers\CameraController.h" />
     <ClInclude Include="Controllers\CameraController3D.h" />
@@ -55,6 +56,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Components\CubeComponent.cpp" />
+    <ClCompile Include="Components\SphereComponent.cpp" />
     <ClCompile Include="Components\SquareComponent.cpp" />
     <ClCompile Include="Controllers\CameraController.cpp" />
     <ClCompile Include="Controllers\CameraController3D.cpp" />

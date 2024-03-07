@@ -1,6 +1,6 @@
 #include "Game.h"
 #include "Components/CubeComponent.h"
-#include "Components/SquareComponent.h"
+#include "Components/SphereComponent.h"
 #include "Controllers/CameraController3D.h"
 #include "Controllers/CameraControllerRadial.h"
 #include "Controllers/PlanetController.h"
@@ -31,7 +31,7 @@ int main()
     camera_controller_3d->is_active() = true;
 
     auto* sun = new objects::PlanetObject();
-    sun->Compose(float3(0, 0, -2), float3(2), new components::CubeComponent());
+    sun->Compose(float3(0, 0, -2), float3(1), new components::SphereComponent());
     auto* square_controller1 = new controllers::PlanetController();
     square_controller1->Compose(sun, nullptr);
     square_controller1->SetSpeed(float3(), float3(), 0,
@@ -74,13 +74,13 @@ int main()
         float3(1, 0, 0), 1);
 
     auto* mars = new objects::PlanetObject();
-    mars->Compose(float3(0, 0, 4), float3(2), new components::CubeComponent());
+    mars->Compose(float3(0, 0, 4), float3(0.75f), new components::SphereComponent());
     auto* square_controller5 = new controllers::PlanetController();
     square_controller5->Compose(mars, sun->transform());
     square_controller5->SetSpeed(
         mars->transform()->position() - sun->transform()->position(),
         float3(1, 0, 0), 0.5f,
-        float3(1, 0, 0), 1);
+        float3(1, 0, 0), 100);
 
     auto* fobos = new objects::PlanetObject();
     fobos->Compose(float3(-0.5, 0, 4.5), float3(0.3f), new components::CubeComponent());
