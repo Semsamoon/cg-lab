@@ -5,18 +5,20 @@
 
 namespace controllers
 {
-    class CameraController final : public engine::update::VariableUpdateAble
+    class CameraController : public engine::update::VariableUpdateAble
     {
     public:
         void Compose(objects::CameraObject* camera_object, engine::input::Device* device);
 
-        void Update(float delta) override;
+        bool& is_active();
 
-    private:
-        void OnMouseEvent(const engine::input::mouse::Event& args) const;
-        void OnKeyboardEvent(const engine::input::keyboard::Event& args) const;
+    protected:
+        virtual void OnMouseEvent(const engine::input::mouse::Event& args) = 0;
+        virtual void OnKeyboardEvent(const engine::input::keyboard::Event& args);
 
         objects::CameraObject* camera_object_ = nullptr;
         engine::input::Device* device_ = nullptr;
+
+        bool is_active_ = false;
     };
 }

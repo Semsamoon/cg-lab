@@ -28,9 +28,9 @@ void Camera::Compose(transform::TransformComponent* transform)
 
 void Camera::UpdateViewMatrix()
 {
-    const float4x4 rotation = float4x4::CreateFromYawPitchRoll(transform_->rotation());
-    const float3 target = float3::Transform(float3::Forward, rotation) + transform_->position();
-    const float3 up_direction = float3::Transform(float3::Up, rotation);
+    const auto rotation = float4x4::CreateFromYawPitchRoll(transform_->rotation());
+    const auto target = float3::Transform(float3::Forward, rotation) + transform_->position();
+    const auto up_direction = float3::Transform(float3::Up, rotation);
     view_matrix_ = float4x4::CreateLookAt(transform_->position(), target, up_direction);
 }
 
