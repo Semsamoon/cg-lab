@@ -6,13 +6,13 @@ using namespace engine::graphics;
 SquareComponent::SquareComponent() : RenderComponent()
 {
     points_[0] = float4(0.1f, 0.1f, 0.0f, 1.0f);
-    points_[1] = float4(1.0f, 0.0f, 0.0f, 1.0f);
+    points_[1] = float4(1.0f, 1.0f, 0.0f, 1.0f);
     points_[2] = float4(-0.1f, -0.1f, 0.0f, 1.0f);
     points_[3] = float4(0.0f, 0.0f, 1.0f, 1.0f);
     points_[4] = float4(0.1f, -0.1f, 0.0f, 1.0f);
     points_[5] = float4(0.0f, 1.0f, 0.0f, 1.0f);
     points_[6] = float4(-0.1f, 0.1f, 0.0f, 1.0f);
-    points_[7] = float4(1.0f, 1.0f, 1.0f, 1.0f);
+    points_[7] = float4(1.0f, 0.0f, 1.0f, 1.0f);
 
     indexes_[0] = 0;
     indexes_[1] = 1;
