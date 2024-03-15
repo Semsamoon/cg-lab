@@ -1,7 +1,5 @@
 #include "RenderPipeline.h"
 
-#pragma comment(lib, "d3d11.lib")
-
 using namespace engine::graphics;
 
 void RenderPipeline::Compose(PHandlerWindow handler_window, const Point& size)
@@ -18,10 +16,9 @@ void RenderPipeline::Compose(PHandlerWindow handler_window, const Point& size)
     ComposeDepthStencilBuffer(size);
 }
 
-void RenderPipeline::Render(const float4x4& camera, float delta) const
+void RenderPipeline::Render(const float4x4& camera, float delta)
 {
     device_context_->ClearState();
-    device_context_->OMSetRenderTargets(1, &render_target_view_, nullptr);
     constexpr float color[] = {0.0f, 0.0f, 0.0f, 1.0f};
     device_context_->RSSetViewports(1, &viewport_);
     device_context_->ClearRenderTargetView(render_target_view_, color);

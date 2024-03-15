@@ -17,7 +17,7 @@ namespace engine
         {
         public:
             void Compose(PHandlerWindow handler_window, const Point& size);
-            void Render(const float4x4& camera, float delta) const;
+            void Render(const float4x4& camera, float delta);
             void Destroy() const;
 
             void Add(RenderAble* render_able);

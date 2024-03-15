@@ -2,8 +2,7 @@
 
 #include <d3dcompiler.h>
 #include <iostream>
-
-#pragma comment(lib, "d3dcompiler.lib")
+#include <WICTextureLoader.h>
 
 using namespace engine::graphics;
 
@@ -28,7 +27,7 @@ RenderComponent::RenderComponent()
         0, D3D11_INPUT_PER_VERTEX_DATA, 0
     };
     input_layout_params.input_element_descriptors[1] = DXInputElementDescriptor{
-        "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0,
+        "TEXCOORD", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0,
         D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0
     };
     input_layout_params.elements_number = 2;
@@ -62,6 +61,14 @@ RenderComponent::RenderComponent()
     auto& rasterizer_state_params = rasterizer_state_.rasterizer_state_params();
     rasterizer_state_params.rasterizer_descriptor.CullMode = D3D11_CULL_NONE;
     rasterizer_state_params.rasterizer_descriptor.FillMode = D3D11_FILL_SOLID;
+
+    sample_descriptor.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+    sample_descriptor.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+    sample_descriptor.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+    sample_descriptor.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+    sample_descriptor.ComparisonFunc = D3D11_COMPARISON_NEVER;
+    sample_descriptor.MinLOD = 0;
+    sample_descriptor.MaxLOD = D3D11_FLOAT32_MAX;
 }
 
 void RenderComponent::Compose(transform::TransformComponent* transform)
@@ -70,12 +77,21 @@ void RenderComponent::Compose(transform::TransformComponent* transform)
     buffers_.transform_buffer_params().subresource_data.pSysMem = &transform_->world_matrix();
 }
 
+void RenderComponent::Compose(const std::string& texture_file_path)
+{
+    texture_file_path_ = texture_file_path;
+}
+
 void RenderComponent::Compose(RenderPipeline* pipeline)
 {
     RenderAble::Compose(pipeline);
     shaders_.Create(pipeline);
     buffers_.Create(pipeline);
     rasterizer_state_.Create(pipeline);
+    pipeline_->device()->CreateSamplerState(&sample_descriptor, &sampler_state_);
+    const std::wstring wide_string(texture_file_path_.begin(), texture_file_path_.end());
+    DirectX::CreateWICTextureFromFile(
+        pipeline_->device(), wide_string.data(), nullptr, &texture_);
 }
 
 void RenderComponent::Render(const float4x4& camera, float delta)
@@ -90,6 +106,10 @@ void RenderComponent::Render(const float4x4& camera, float delta)
     context->IASetPrimitiveTopology(render_params_.primitive_topology);
     context->IASetIndexBuffer(buffers_.index_buffer(), DXGI_FORMAT_R32_UINT, 0);
     context->IASetVertexBuffers(0, 1, buffers_.vertex_buffer_pointer(), strides, offsets);
+
+    context->PSSetSamplers(0, 1, &sampler_state_);
+    context->PSSetShaderResources(0, 1, &texture_);
+
     UpdateTransformBuffer(context, camera);
 
     context->VSSetShader(shaders_.vertex_shader(), nullptr, 0);
