@@ -12,15 +12,8 @@ void CameraController::Compose(objects::CameraObject* camera_object, engine::inp
     device_->keyboard_event.AddRaw(this, &CameraController::OnKeyboardEvent);
 }
 
-bool& CameraController::is_active()
-{
-    return is_active_;
-}
-
 void CameraController::OnKeyboardEvent(const engine::input::keyboard::Event& args)
 {
-    if (!is_active_) return;
-
     if (args.code != engine::input::keyboard::Keys::Tab || args.button != engine::input::keyboard::Buttons::Down)
         return;
     if (camera_object_->camera()->is_perspective())

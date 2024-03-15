@@ -51,7 +51,7 @@ namespace engine
             float4x4 view_matrix_;
             float4x4 projection_matrix_;
 
-            bool is_perspective_;
+            bool is_perspective_ = false;
         };
     }
 }

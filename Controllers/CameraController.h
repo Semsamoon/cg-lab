@@ -10,15 +10,11 @@ namespace controllers
     public:
         void Compose(objects::CameraObject* camera_object, engine::input::Device* device);
 
-        bool& is_active();
-
     protected:
         virtual void OnMouseEvent(const engine::input::mouse::Event& args) = 0;
         virtual void OnKeyboardEvent(const engine::input::keyboard::Event& args);
 
         objects::CameraObject* camera_object_ = nullptr;
         engine::input::Device* device_ = nullptr;
-
-        bool is_active_ = false;
     };
 }

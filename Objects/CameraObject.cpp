@@ -4,7 +4,7 @@ using namespace objects;
 
 void CameraObject::Compose(const Point& size)
 {
-    transform_.position().z = -1;
+    transform_.local_position().z = -1;
     transform_.UpdateWorldMatrix();
     camera_.perspective_params().aspect_ratio = static_cast<float>(size.x) / static_cast<float>(size.y);
     camera_.Compose(&transform_);

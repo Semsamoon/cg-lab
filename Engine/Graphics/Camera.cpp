@@ -28,10 +28,10 @@ void Camera::Compose(transform::TransformComponent* transform)
 
 void Camera::UpdateViewMatrix()
 {
-    const auto rotation = float4x4::CreateFromYawPitchRoll(transform_->rotation());
-    const auto target = float3::Transform(float3::Forward, rotation) + transform_->position();
+    const auto rotation = transform_->local_rotation();
+    const auto target = float3::Transform(float3::Forward, rotation) + transform_->local_position();
     const auto up_direction = float3::Transform(float3::Up, rotation);
-    view_matrix_ = float4x4::CreateLookAt(transform_->position(), target, up_direction);
+    view_matrix_ = float4x4::CreateLookAt(transform_->local_position(), target, up_direction);
 }
 
 void Camera::UpdateProjectionMatrixPerspective()
