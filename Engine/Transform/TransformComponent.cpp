@@ -4,7 +4,7 @@ using namespace engine::transform;
 
 TransformComponent::TransformComponent()
 {
-    scale_ = float3(1);
+    local_scale_ = float3(1);
     UpdateWorldMatrix();
 }
 
@@ -16,9 +16,9 @@ void TransformComponent::Compose(TransformComponent* parent)
 void TransformComponent::UpdateWorldMatrix()
 {
     world_matrix_ =
-        float4x4::CreateScale(scale_)
-        * float4x4::CreateFromYawPitchRoll(rotation_)
-        * float4x4::CreateTranslation(position_)
+        float4x4::CreateScale(local_scale_)
+        * float4x4::CreateFromQuaternion(local_rotation_)
+        * float4x4::CreateTranslation(local_position_)
         * (parent_ == nullptr ? float4x4::Identity : parent_->world_matrix_);
 }
 
@@ -32,17 +32,17 @@ float4x4& TransformComponent::world_matrix()
     return world_matrix_;
 }
 
-float3& TransformComponent::position()
+float3& TransformComponent::local_position()
 {
-    return position_;
+    return local_position_;
 }
 
-float3& TransformComponent::rotation()
+DirectX::SimpleMath::Quaternion& TransformComponent::local_rotation()
 {
-    return rotation_;
+    return local_rotation_;
 }
 
-float3& TransformComponent::scale()
+float3& TransformComponent::local_scale()
 {
-    return scale_;
+    return local_scale_;
 }

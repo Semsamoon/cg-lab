@@ -17,6 +17,13 @@ void Collision::Add(CollisionAble* collision_able)
     collision_able->Compose(this);
 }
 
+void Collision::Remove(const CollisionAble* collision_able)
+{
+    auto iter = collision_ables_.begin();
+    while (*iter != collision_able) iter += 1;
+    collision_ables_.erase(iter, iter + 1);
+}
+
 bool Collision::CastRay(
     const float3& position, const float3& direction, transform::TransformComponent** intersected) const
 {

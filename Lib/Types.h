@@ -47,6 +47,7 @@ typedef ID3D11DeviceContext DXDeviceContext;
 
 typedef IDXGISwapChain DXSwapChain;
 typedef ID3D11RenderTargetView DXRenderTargetView;
+
 typedef D3D11_VIEWPORT DXViewport;
 typedef D3D11_MAPPED_SUBRESOURCE DXMappedSubresource;
 
@@ -71,5 +72,8 @@ typedef ID3D11DepthStencilView DXDepthStencilView;
 
 typedef ID3D11RasterizerState DXRasterizerState;
 typedef CD3D11_RASTERIZER_DESC DXRasterizerDescriptor;
+
+typedef ID3D11SamplerState DXSamplerState;
+typedef ID3D11ShaderResourceView DXShaderResourceView;
 
 typedef D3D11_PRIMITIVE_TOPOLOGY DXPrimitiveTopology;

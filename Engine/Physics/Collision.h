@@ -15,6 +15,7 @@ namespace engine
             void FixedUpdate() override;
 
             void Add(CollisionAble* collision_able);
+            void Remove(const CollisionAble* collision_able);
 
             bool CastRay(
                 const float3& position, const float3& direction, transform::TransformComponent** intersected) const;

@@ -16,7 +16,7 @@ namespace engine
             virtual void Compose(Collision* collision);
             virtual void Collided(CollisionAble* other);
 
-            virtual DXBox& bounding_box() = 0;
+            virtual DXBox bounding_box() = 0;
             transform::TransformComponent* transform() const;
 
         protected:
