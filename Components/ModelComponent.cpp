@@ -19,9 +19,10 @@ void ModelComponent::Compose(engine::graphics::RenderPipeline* pipeline)
     for (auto& mesh : meshes_) mesh.Compose(pipeline_);
 }
 
-void ModelComponent::Compose(engine::transform::TransformComponent* transform)
+void ModelComponent::Compose(engine::transform::TransformComponent* transform,
+                             engine::transform::TransformComponent* camera)
 {
-    for (auto& mesh : meshes_) mesh.Compose(transform);
+    for (auto& mesh : meshes_) mesh.Compose(transform, camera);
 }
 
 void ModelComponent::Render(const float4x4& camera, float delta)

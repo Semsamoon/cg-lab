@@ -11,7 +11,8 @@ namespace objects
     class FoodSpawnerObject final : public engine::graphics::RenderAble, public engine::update::VariableUpdateAble
     {
     public:
-        void Compose(std::string file_paths[], float probabilities[], float2 area, int32 amount);
+        void Compose(std::string file_paths[], float probabilities[], float2 area, int32 amount,
+            engine::transform::TransformComponent* camera);
         void Compose(engine::graphics::RenderPipeline* pipeline) override;
         void Compose(engine::physics::Collision* collision);
         

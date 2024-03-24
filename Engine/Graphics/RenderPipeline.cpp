@@ -1,5 +1,7 @@
 #include "RenderPipeline.h"
 
+#include "../../Game.h"
+
 using namespace engine::graphics;
 
 void RenderPipeline::Compose(PHandlerWindow handler_window, const Point& size)
@@ -14,6 +16,16 @@ void RenderPipeline::Compose(PHandlerWindow handler_window, const Point& size)
     ComposeDeviceAndSwapChain(handler_window);
     ComposeRenderTargetView();
     ComposeDepthStencilBuffer(size);
+
+    light_buffer_.data.color = float4(1, 1, 1, 0);
+    light_buffer_.data.direction = float4(-0.7f, -0.7f, 0, 0);
+    light_buffer_.data.k = float4(0.2f, 100.0f, 1.2f, 0);
+    light_buffer_.Compose(device_, device_context_);
+
+    dyn_light_buffer_.data.direction = float4(0, 1, 0, 0);
+    dyn_light_buffer_.data.color = float4(1, 0, 0, 0);
+    dyn_light_buffer_.data.k = float4(0, 0.1f, 0.1f, 0);
+    dyn_light_buffer_.Compose(device_, device_context_);
 }
 
 void RenderPipeline::Render(const float4x4& camera, float delta)
@@ -24,7 +36,20 @@ void RenderPipeline::Render(const float4x4& camera, float delta)
     device_context_->ClearRenderTargetView(render_target_view_, color);
     device_context_->ClearDepthStencilView(depth_stencil_view_, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1, 0);
     device_context_->OMSetRenderTargets(1, &render_target_view_, depth_stencil_view_);
+
+    light_buffer_.data.direction = float4::Transform(light_buffer_.data.direction,
+                                                     DirectX::SimpleMath::Quaternion::CreateFromYawPitchRoll(
+                                                         0, 1 * delta, 0));
+    light_buffer_.Apply();
+    device_context_->PSSetConstantBuffers(1, 1, light_buffer_.buffer_pointer());
+
+    t_ += delta;
+    dyn_light_buffer_.data.direction = float4(0, 1, sin(t_) * 5, 0);
+    dyn_light_buffer_.Apply();
+    device_context_->PSSetConstantBuffers(2, 1, dyn_light_buffer_.buffer_pointer());
+
     for (auto* pRenderAble : render_ables_) pRenderAble->Render(camera, delta);
+
     swap_chain_->Present(1, DXGI_PRESENT_DO_NOT_WAIT);
 }
 
@@ -44,7 +69,7 @@ void RenderPipeline::Add(RenderAble* render_able)
 
 DXDevice* RenderPipeline::device() const
 {
-    return device_.Get();
+    return device_;
 }
 
 DXDeviceContext* RenderPipeline::device_context() const

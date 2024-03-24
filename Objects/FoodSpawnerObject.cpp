@@ -9,7 +9,7 @@ using namespace objects;
 using namespace DirectX::SimpleMath;
 
 void FoodSpawnerObject::Compose(
-    std::string file_paths[], float probabilities[], float2 area, int32 amount)
+    std::string file_paths[], float probabilities[], float2 area, int32 amount, engine::transform::TransformComponent* camera)
 {
     srand(static_cast<uint32>(std::chrono::high_resolution_clock::now().time_since_epoch().count()));
 
@@ -23,7 +23,7 @@ void FoodSpawnerObject::Compose(
                                (static_cast<float>(rand()) / RAND_MAX - 0.5f) * area.y);
         const auto rotation = Quaternion::CreateFromYawPitchRoll(static_cast<float>(rand()) / RAND_MAX * 6.28f, 0, 0);
         food.Compose(position, float3(0.002f), float3(0.2f),
-                     file_paths[j * 2], file_paths[j * 2 + 1]);
+                     file_paths[j * 2], file_paths[j * 2 + 1], camera);
         food.transform()->local_rotation() = rotation;
         food.transform()->UpdateWorldMatrix();
         food_objects_.push_back(std::move(food));

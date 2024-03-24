@@ -1,6 +1,4 @@
 #include "Game.h"
-#include "Components/ModelComponent.h"
-#include "Components/SquareComponent.h"
 #include "Controllers/CameraControllerRadial.h"
 #include "Controllers/PlayerController.h"
 #include "Objects/CameraObject.h"
@@ -24,7 +22,7 @@ int main()
 
     auto* player = new objects::PlayerObject();
     player->Compose(float3(0, 0, -2), float3(0.05f), float3(0.3f), float3(0.02f), float3(0.005f),
-                    std::string("Data\\Ball.fbx"), std::string("Data\\Ball-texture.jpg"));
+                    std::string("Data\\Ball.fbx"), std::string("Data\\Ball-texture.jpg"), camera_object->transform());
     game->render_pipeline()->Add(player);
     game->physics_collision()->Add(player);
 
@@ -34,11 +32,13 @@ int main()
     player_controller->Compose(player, camera_object, game->input_device());
     game->variable_update()->Add(player_controller);
 
-    std::string file_paths[] = {"Data\\MALE.fbx", "Data\\Male_texture.png", "Data\\FEMALE.fbx", "Data\\Female_texture.png"};
+    std::string file_paths[] = {
+        "Data\\MALE.fbx", "Data\\Male_texture.png", "Data\\FEMALE.fbx", "Data\\Female_texture.png"
+    };
     float probabilities[] = {0.5f, 0.5f};
 
     auto* food_spawner = new objects::FoodSpawnerObject();
-    food_spawner->Compose(file_paths, probabilities, float2(10, 10), 20);
+    food_spawner->Compose(file_paths, probabilities, float2(10, 10), 20, camera_object->transform());
     game->render_pipeline()->Add(food_spawner);
     game->variable_update()->Add(food_spawner);
     food_spawner->Compose(game->physics_collision());

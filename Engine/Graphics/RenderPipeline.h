@@ -1,9 +1,9 @@
 #pragma once
 
-#include <wrl.h>
 #include <d3d11.h>
 #include <vector>
 
+#include "ConstantBuffer.hpp"
 #include "RenderAble.h"
 #include "../../Lib/Types.h"
 
@@ -12,6 +12,13 @@ namespace engine
     namespace graphics
     {
         class RenderAble;
+
+        struct LightsParams
+        {
+            float4 direction;
+            float4 color;
+            float4 k;
+        };
 
         class RenderPipeline final
         {
@@ -32,13 +39,17 @@ namespace engine
 
             Point size_{};
             DXViewport viewport_{};
-            Microsoft::WRL::ComPtr<DXDevice> device_;
+            DXDevice* device_ = nullptr;
             DXDeviceContext* device_context_ = nullptr;
             DXSwapChain* swap_chain_ = nullptr;
             DXRenderTargetView* render_target_view_ = nullptr;
             DXDepthStencilView* depth_stencil_view_ = nullptr;
             DXTexture2D* depth_stencil_buffer_ = nullptr;
             std::vector<RenderAble*> render_ables_{};
+
+            ConstantBuffer<LightsParams> light_buffer_;
+            ConstantBuffer<LightsParams> dyn_light_buffer_;
+            float t_ = 0;
         };
     }
 }

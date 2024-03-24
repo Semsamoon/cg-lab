@@ -27,6 +27,7 @@
     <ClInclude Include="Controllers\CameraController.h" />
     <ClInclude Include="Controllers\CameraControllerRadial.h" />
     <ClInclude Include="Controllers\PlayerController.h" />
+    <ClInclude Include="Engine\Graphics\ConstantBuffer.hpp" />
     <ClInclude Include="Engine\Input\Device.h" />
     <ClInclude Include="Engine\Input\Keyboard.h" />
     <ClInclude Include="Engine\Input\Mouse.h" />

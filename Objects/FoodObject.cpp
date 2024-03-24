@@ -8,7 +8,8 @@ using namespace DirectX::SimpleMath;
 
 void FoodObject::Compose(
     const float3& position, const float3& scale, const float3& box_scale,
-    const std::string& model_file_path, const std::string& texture_file_path)
+    const std::string& model_file_path, const std::string& texture_file_path,
+    engine::transform::TransformComponent* camera)
 {
     transform_ = new engine::transform::TransformComponent();
     transform_->local_position() = position;
@@ -17,7 +18,7 @@ void FoodObject::Compose(
     bounding_box_scale_ = box_scale / 2;
     model_ = new components::ModelComponent();
     model_->Compose(model_file_path, texture_file_path);
-    model_->Compose(transform_);
+    model_->Compose(transform_, camera);
 }
 
 void FoodObject::Update(float delta)
@@ -44,7 +45,7 @@ components::ModelComponent* FoodObject::model() const
 DXBox FoodObject::bounding_box()
 {
     float3 scale, position;
-    DirectX::SimpleMath::Quaternion rotation;
+    Quaternion rotation;
     transform_->world_matrix().Decompose(scale, rotation, position);
     return DXBox(position, bounding_box_scale_);
 }

@@ -19,20 +19,15 @@ namespace engine
 
             BufferParams& vertex_buffer_params();
             BufferParams& index_buffer_params();
-            BufferParams& transform_buffer_params();
             DXBuffer* vertex_buffer() const;
             DXBuffer* const* vertex_buffer_pointer() const;
             DXBuffer* index_buffer() const;
-            DXBuffer* transform_buffer() const;
-            DXBuffer* const* transform_buffer_pointer() const;
 
         private:
             BufferParams vertex_buffer_params_{};
             BufferParams index_buffer_params_{};
-            BufferParams transform_buffer_params_{};
             DXBuffer* vertex_buffer_ = nullptr;
             DXBuffer* index_buffer_ = nullptr;
-            DXBuffer* transform_buffer_ = nullptr;
         };
     }
 }

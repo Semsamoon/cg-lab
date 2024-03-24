@@ -21,16 +21,20 @@ RenderComponent::RenderComponent()
     pixel_shader_params.flags1 = D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION | D3DCOMPILE_PACK_MATRIX_ROW_MAJOR;
 
     auto& input_layout_params = shaders_.input_layout_params();
-    input_layout_params.input_element_descriptors = new DXInputElementDescriptor[2];
+    input_layout_params.input_element_descriptors = new DXInputElementDescriptor[3];
     input_layout_params.input_element_descriptors[0] = DXInputElementDescriptor{
-        "POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0,
+        "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0,
         0, D3D11_INPUT_PER_VERTEX_DATA, 0
     };
     input_layout_params.input_element_descriptors[1] = DXInputElementDescriptor{
-        "TEXCOORD", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0,
+        "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0,
         D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0
     };
-    input_layout_params.elements_number = 2;
+    input_layout_params.input_element_descriptors[2] = DXInputElementDescriptor{
+        "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0,
+        D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0
+    };
+    input_layout_params.elements_number = 3;
 
     auto& vertex_buffer_params = buffers_.vertex_buffer_params();
     vertex_buffer_params.buffer_descriptor.Usage = D3D11_USAGE_DEFAULT;
@@ -50,14 +54,6 @@ RenderComponent::RenderComponent()
     index_buffer_params.subresource_data.SysMemPitch = 0;
     index_buffer_params.subresource_data.SysMemSlicePitch = 0;
 
-    auto& transform_buffer_params = buffers_.transform_buffer_params();
-    transform_buffer_params.buffer_descriptor.Usage = D3D11_USAGE_DYNAMIC;
-    transform_buffer_params.buffer_descriptor.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-    transform_buffer_params.buffer_descriptor.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-    transform_buffer_params.buffer_descriptor.MiscFlags = 0;
-    transform_buffer_params.buffer_descriptor.StructureByteStride = 0;
-    transform_buffer_params.buffer_descriptor.ByteWidth = sizeof(float4x4);
-
     auto& rasterizer_state_params = rasterizer_state_.rasterizer_state_params();
     rasterizer_state_params.rasterizer_descriptor.CullMode = D3D11_CULL_NONE;
     rasterizer_state_params.rasterizer_descriptor.FillMode = D3D11_FILL_SOLID;
@@ -71,10 +67,10 @@ RenderComponent::RenderComponent()
     sample_descriptor.MaxLOD = D3D11_FLOAT32_MAX;
 }
 
-void RenderComponent::Compose(transform::TransformComponent* transform)
+void RenderComponent::Compose(transform::TransformComponent* transform, transform::TransformComponent* camera)
 {
     transform_ = transform;
-    buffers_.transform_buffer_params().subresource_data.pSysMem = &transform_->world_matrix();
+    camera_ = camera;
 }
 
 void RenderComponent::Compose(const std::string& texture_file_path)
@@ -92,6 +88,7 @@ void RenderComponent::Compose(RenderPipeline* pipeline)
     const std::wstring wide_string(texture_file_path_.begin(), texture_file_path_.end());
     DirectX::CreateWICTextureFromFile(
         pipeline_->device(), wide_string.data(), nullptr, &texture_);
+    transform_buffer_.Compose(pipeline->device(), pipeline->device_context());
 }
 
 void RenderComponent::Render(const float4x4& camera, float delta)
@@ -107,10 +104,10 @@ void RenderComponent::Render(const float4x4& camera, float delta)
     context->IASetIndexBuffer(buffers_.index_buffer(), DXGI_FORMAT_R32_UINT, 0);
     context->IASetVertexBuffers(0, 1, buffers_.vertex_buffer_pointer(), strides, offsets);
 
+    UpdateTransformBuffer(context, camera);
+
     context->PSSetSamplers(0, 1, &sampler_state_);
     context->PSSetShaderResources(0, 1, &texture_);
-
-    UpdateTransformBuffer(context, camera);
 
     context->VSSetShader(shaders_.vertex_shader(), nullptr, 0);
     context->PSSetShader(shaders_.pixel_shader(), nullptr, 0);
@@ -118,13 +115,13 @@ void RenderComponent::Render(const float4x4& camera, float delta)
     context->DrawIndexed(index_count_, 0, 0);
 }
 
-void RenderComponent::UpdateTransformBuffer(DXDeviceContext* context, const float4x4& camera) const
+void RenderComponent::UpdateTransformBuffer(DXDeviceContext* context, const float4x4& camera)
 {
-    const auto matrix = transform_->world_matrix() * camera;
-    DXMappedSubresource subresource = {};
-    context->Map(buffers_.transform_buffer(), 0, D3D11_MAP_WRITE_DISCARD, 0, &subresource);
-    auto* data = static_cast<float*>(subresource.pData);
-    memcpy(data, &matrix, sizeof(float4x4));
-    context->Unmap(buffers_.transform_buffer(), 0);
-    context->VSSetConstantBuffers(0, 1, buffers_.transform_buffer_pointer());
+    transform_buffer_.data.world = transform_->world_matrix();
+    transform_buffer_.data.world_view_projection = transform_->world_matrix() * camera;
+    transform_buffer_.data.view_position = float4(camera_->world_matrix().Translation().x,
+                                                  camera_->world_matrix().Translation().y,
+                                                  camera_->world_matrix().Translation().z, 0);
+    transform_buffer_.Apply();
+    context->VSSetConstantBuffers(0, 1, transform_buffer_.buffer_pointer());
 }

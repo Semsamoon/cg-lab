@@ -17,20 +17,30 @@ namespace engine
             DXPrimitiveTopology primitive_topology;
         };
 
+        struct TransformBufferParams
+        {
+            float4x4 world;
+            float4x4 world_view_projection;
+            float4 view_position;
+        };
+
         class RenderComponent : public RenderAble
         {
         public:
             RenderComponent();
 
-            void Compose(transform::TransformComponent* transform);
+            void Compose(transform::TransformComponent* transform, transform::TransformComponent* camera);
             void Compose(const std::string& texture_file_path);
             void Compose(RenderPipeline* pipeline) override;
             void Render(const float4x4& camera, float delta) override;
 
         protected:
-            void UpdateTransformBuffer(DXDeviceContext* context, const float4x4& camera) const;
+            void UpdateTransformBuffer(DXDeviceContext* context, const float4x4& camera);
 
             transform::TransformComponent* transform_ = nullptr;
+            ConstantBuffer<TransformBufferParams> transform_buffer_{};
+
+            transform::TransformComponent* camera_ = nullptr;
 
             RenderParams render_params_{};
             Shaders shaders_;
