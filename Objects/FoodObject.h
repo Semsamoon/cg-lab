@@ -13,8 +13,7 @@ namespace objects
 
         void Compose(
             const float3& position, const float3& scale, const float3& box_scale,
-            const std::string& model_file_path, const std::string& texture_file_path,
-            engine::transform::TransformComponent* camera);
+            const std::string& model_file_path, const std::string& texture_file_path);
 
         void Update(float delta) override;
 

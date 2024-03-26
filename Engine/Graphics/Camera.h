@@ -39,6 +39,7 @@ namespace engine
 
             float4x4& view_matrix();
             float4x4& projection_matrix();
+            float3 position() const;
 
             bool is_perspective() const;
 

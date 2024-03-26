@@ -3,6 +3,7 @@
 #include "../../Game.h"
 
 using namespace engine::graphics;
+using namespace DirectX::SimpleMath;
 
 void RenderPipeline::Compose(PHandlerWindow handler_window, const Point& size)
 {
@@ -13,49 +14,98 @@ void RenderPipeline::Compose(PHandlerWindow handler_window, const Point& size)
     viewport_.TopLeftY = 0;
     viewport_.MinDepth = 0;
     viewport_.MaxDepth = 1;
+
     ComposeDeviceAndSwapChain(handler_window);
     ComposeRenderTargetView();
     ComposeDepthStencilBuffer(size);
 
-    light_buffer_.data.color = float4(1, 1, 1, 0);
-    light_buffer_.data.direction = float4(-0.7f, -0.7f, 0, 0);
-    light_buffer_.data.k = float4(0.2f, 100.0f, 1.2f, 0);
-    light_buffer_.Compose(device_, device_context_);
+    DXRasterizerDescriptor rasterizer_state_params;
+    rasterizer_state_params.CullMode = D3D11_CULL_NONE;
+    rasterizer_state_params.FillMode = D3D11_FILL_SOLID;
+    device_->CreateRasterizerState(&rasterizer_state_params, &rasterizer_state_);
 
-    dyn_light_buffer_.data.direction = float4(0, 1, 0, 0);
-    dyn_light_buffer_.data.color = float4(1, 0, 0, 0);
-    dyn_light_buffer_.data.k = float4(0, 0.1f, 0.1f, 0);
-    dyn_light_buffer_.Compose(device_, device_context_);
+    depth_shader_.Compose(device_, device_context_, L"\\Shaders\\DepthShader.hlsl");
+    shadow_shader_.Compose(device_, device_context_, L"\\Shaders\\ShadowShader.hlsl");
+
+    light_transform_buffer_.data.light_view_projection = float4x4::CreateLookAt(
+        float3(0, 10, 0), float3(0, 0, 0), float3::Forward) * float4x4::CreatePerspectiveFieldOfView(
+        3.14f / 2, 1, 0.01f, 1000);
+    light_transform_buffer_.Compose(device_, device_context_);
+
+    ambient_light_buffer_.data.color = float4(1, 1, 1, 0);
+    ambient_light_buffer_.data.intensity = 0.2f;
+    ambient_light_buffer_.Compose(device_, device_context_);
+
+    directional_light_buffer_.data.color = float4(1, 1, 1, 0);
+    directional_light_buffer_.data.direction = float4(-0.7f, -0.7f, 0, 0);
+    directional_light_buffer_.data.diffK_specA_specK = float4(0.8f, 2.0f, 0.2f, 0);
+    directional_light_buffer_.Compose(device_, device_context_);
+
+    point_light_buffer_.data.world_position = float4(0, 1, 0, 0);
+    point_light_buffer_.data.color = float4(1, 0, 0, 0);
+    point_light_buffer_.data.diffK_specA_specK = float4(1.0f, 1.0f, 1.0f, 0);
+    point_light_buffer_.Compose(device_, device_context_);
 }
 
-void RenderPipeline::Render(const float4x4& camera, float delta)
+void RenderPipeline::Render(const float4x4& view_projection, float delta)
 {
-    device_context_->ClearState();
     constexpr float color[] = {0.0f, 0.0f, 0.0f, 1.0f};
+
+    device_context_->ClearState();
     device_context_->RSSetViewports(1, &viewport_);
-    device_context_->ClearRenderTargetView(render_target_view_, color);
+    device_context_->RSSetState(rasterizer_state_);
+
+
+    //Render for Depth Shader
+    device_context_->ClearRenderTargetView(render_target_view_depth_, color);
     device_context_->ClearDepthStencilView(depth_stencil_view_, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1, 0);
-    device_context_->OMSetRenderTargets(1, &render_target_view_, depth_stencil_view_);
+    device_context_->OMSetRenderTargets(1, &render_target_view_depth_, depth_stencil_view_);
 
-    light_buffer_.data.direction = float4::Transform(light_buffer_.data.direction,
-                                                     DirectX::SimpleMath::Quaternion::CreateFromYawPitchRoll(
-                                                         0, 1 * delta, 0));
-    light_buffer_.Apply();
-    device_context_->PSSetConstantBuffers(1, 1, light_buffer_.buffer_pointer());
+    for (auto* render_able : render_ables_)
+    {
+        render_able->Render(device_context_);
+        depth_shader_.Render(device_context_, render_able->index_count(), render_able->world(), view_projection);
+    }
 
-    t_ += delta;
-    dyn_light_buffer_.data.direction = float4(0, 1, sin(t_) * 5, 0);
-    dyn_light_buffer_.Apply();
-    device_context_->PSSetConstantBuffers(2, 1, dyn_light_buffer_.buffer_pointer());
+    //Set Constant Buffers for Shadow Shader
+    const auto camera_position = Game::Instance()->camera()->position();
+    light_transform_buffer_.data.camera_position = float4(camera_position.x, camera_position.y, camera_position.z, 0);
+    light_transform_buffer_.Apply();
+    device_context_->VSSetConstantBuffers(1, 1, light_transform_buffer_.buffer_pointer());
 
-    for (auto* pRenderAble : render_ables_) pRenderAble->Render(camera, delta);
+    ambient_light_buffer_.Apply();
+    device_context_->PSSetConstantBuffers(2, 1, ambient_light_buffer_.buffer_pointer());
+
+    directional_light_buffer_.data.direction = float4::Transform(directional_light_buffer_.data.direction,
+                                                                 Quaternion::CreateFromYawPitchRoll(1 * delta, 0, 0));
+    directional_light_buffer_.Apply();
+    device_context_->PSSetConstantBuffers(3, 1, directional_light_buffer_.buffer_pointer());
+
+    //t_ += delta;
+    //point_light_buffer_.data.world_position = float4(0, 1, sin(t_) * 5, 0);
+    //point_light_buffer_.Apply();
+    //device_context_->PSSetConstantBuffers(4, 1, point_light_buffer_.buffer_pointer());
+
+    //Render for Shadow Shader
+    device_context_->ClearRenderTargetView(render_target_view_final_, color);
+    device_context_->ClearDepthStencilView(depth_stencil_view_, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1, 0);
+    device_context_->OMSetRenderTargets(1, &render_target_view_final_, depth_stencil_view_);
+
+    device_context_->PSSetShaderResources(1, 1, &depth_shader_resource_view_);
+
+    for (auto* render_able : render_ables_)
+    {
+        render_able->Render(device_context_);
+        shadow_shader_.Render(
+            device_context_, render_able->index_count(), render_able->world(), view_projection, render_able->texture());
+    }
 
     swap_chain_->Present(1, DXGI_PRESENT_DO_NOT_WAIT);
 }
 
 void RenderPipeline::Destroy() const
 {
-    render_target_view_->Release();
+    render_target_view_final_->Release();
     swap_chain_->Release();
     device_context_->Release();
     device_->Release();
@@ -64,7 +114,7 @@ void RenderPipeline::Destroy() const
 void RenderPipeline::Add(RenderAble* render_able)
 {
     render_ables_.push_back(render_able);
-    render_able->Compose(this);
+    render_able->Compose(device_);
 }
 
 DXDevice* RenderPipeline::device() const
@@ -106,9 +156,25 @@ void RenderPipeline::ComposeDeviceAndSwapChain(PHandlerWindow handler_window)
 
 void RenderPipeline::ComposeRenderTargetView()
 {
-    ID3D11Texture2D* background_texture;
-    swap_chain_->GetBuffer(0, __uuidof(ID3D11Texture2D), reinterpret_cast<void**>(&background_texture));
-    device_->CreateRenderTargetView(background_texture, nullptr, &render_target_view_);
+    DXTexture2DDescriptor texture_depth_descriptor;
+    texture_depth_descriptor.Width = 1024;
+    texture_depth_descriptor.Height = 1024;
+    texture_depth_descriptor.MipLevels = 1;
+    texture_depth_descriptor.ArraySize = 1;
+    texture_depth_descriptor.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+    texture_depth_descriptor.SampleDesc.Count = 1;
+    texture_depth_descriptor.SampleDesc.Quality = 0;
+    texture_depth_descriptor.Usage = D3D11_USAGE_DEFAULT;
+    texture_depth_descriptor.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
+    texture_depth_descriptor.CPUAccessFlags = 0;
+    texture_depth_descriptor.MiscFlags = 0;
+
+    device_->CreateTexture2D(&texture_depth_descriptor, nullptr, &background_texture_depth_);
+    device_->CreateRenderTargetView(background_texture_depth_, nullptr, &render_target_view_depth_);
+    device_->CreateShaderResourceView(background_texture_depth_, nullptr, &depth_shader_resource_view_);
+
+    swap_chain_->GetBuffer(0, __uuidof(ID3D11Texture2D), reinterpret_cast<void**>(&background_texture_final_));
+    device_->CreateRenderTargetView(background_texture_final_, nullptr, &render_target_view_final_);
 }
 
 void RenderPipeline::ComposeDepthStencilBuffer(const Point& size)
@@ -128,5 +194,4 @@ void RenderPipeline::ComposeDepthStencilBuffer(const Point& size)
 
     device_->CreateTexture2D(&depth_stencil_descriptor, nullptr, &depth_stencil_buffer_);
     device_->CreateDepthStencilView(depth_stencil_buffer_, nullptr, &depth_stencil_view_);
-    device_context_->OMSetRenderTargets(1, &render_target_view_, depth_stencil_view_);
 }

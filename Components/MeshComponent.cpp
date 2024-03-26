@@ -10,7 +10,7 @@ MeshComponent::MeshComponent(const aiMesh* mesh)
 {
     for (uint32 i = 0; i < mesh->mNumVertices; i++)
     {
-        VertexInputParams params;
+        VertexInputElement params;
 
         params.position = float3(mesh->mVertices[i].x, mesh->mVertices[i].y, mesh->mVertices[i].z);
 
@@ -34,14 +34,4 @@ MeshComponent::MeshComponent(const aiMesh* mesh)
     }
 
     index_count_ = static_cast<uint32>(indexes_.size());
-
-    buffers_.vertex_buffer_params().buffer_descriptor.ByteWidth = sizeof(VertexInputParams) * static_cast<uint32>(
-        vertex_input_params_.size());
-    buffers_.vertex_buffer_params().subresource_data.pSysMem = vertex_input_params_.data();
-
-    buffers_.index_buffer_params().buffer_descriptor.ByteWidth = sizeof(int32) * static_cast<uint32>(indexes_.size());
-    buffers_.index_buffer_params().subresource_data.pSysMem = indexes_.data();
-
-    shaders_.vertex_shader_params().path = new char16[]{L"./Shaders/Shader.hlsl"};
-    shaders_.pixel_shader_params().path = new char16[]{L"./Shaders/Shader.hlsl"};
 }

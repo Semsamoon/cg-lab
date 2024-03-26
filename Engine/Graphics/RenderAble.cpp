@@ -2,7 +2,7 @@
 
 using namespace engine::graphics;
 
-void RenderAble::Compose(RenderPipeline* pipeline)
+uint32 RenderAble::index_count() const
 {
-    pipeline_ = pipeline;
+    return index_count_;
 }

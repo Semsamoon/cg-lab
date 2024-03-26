@@ -26,6 +26,11 @@ namespace engine
                 device->CreateBuffer(&descriptor, nullptr, &buffer_);
             }
 
+            void Release() const
+            {
+                buffer_->Release();
+            }
+
             void Apply()
             {
                 DXMappedSubresource subresource;
