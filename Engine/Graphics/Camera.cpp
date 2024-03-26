@@ -70,11 +70,6 @@ float4x4& Camera::projection_matrix()
     return projection_matrix_;
 }
 
-float3 Camera::position() const
-{
-    return transform_->world_matrix().Translation();
-}
-
 bool Camera::is_perspective() const
 {
     return is_perspective_;

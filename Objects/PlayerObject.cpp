@@ -5,9 +5,8 @@
 using namespace objects;
 
 void PlayerObject::Compose(
-    const float3& position, const float3& scale, const float3& box_scale, const float3& box_increasing,
-    const float3& scale_increasing,
-    const std::string& model_file_path, const std::string& texture_file_path)
+    const float3& position, const float3& scale, const float3& box_scale, const float3& box_increasing, const float3& scale_increasing,
+    const std::string& model_file_path, const std::string& texture_file_path, engine::transform::TransformComponent* camera)
 {
     transform_ = new engine::transform::TransformComponent();
     transform_->local_position() = position;
@@ -16,7 +15,7 @@ void PlayerObject::Compose(
     transform_ball_ = engine::transform::TransformComponent();
     transform_ball_.Compose(transform_);
     transform_ball_.UpdateWorldMatrix();
-
+    
     transform_model_ = engine::transform::TransformComponent();
     transform_model_.local_scale() = scale;
     transform_model_.Compose(&transform_ball_);
@@ -28,18 +27,24 @@ void PlayerObject::Compose(
 
     model_ = components::ModelComponent();
     model_.Compose(model_file_path, texture_file_path);
-    model_.Compose(&transform_model_);
+    model_.Compose(&transform_model_, camera);
 }
 
 void PlayerObject::Compose(engine::graphics::RenderPipeline* pipeline)
 {
-    model_.Compose(pipeline);
+    RenderAble::Compose(pipeline);
+    model_.Compose(pipeline_);
+}
+
+void PlayerObject::Render(const float4x4& camera, float delta)
+{
+    model_.Render(camera, delta);
 }
 
 void PlayerObject::Collided(CollisionAble* other)
 {
     const auto* food = dynamic_cast<FoodObject*>(other);
-    if (food == nullptr) return;
+    if (food== nullptr) return;
     bounding_box_scale_ += box_increasing_;
     transform_model_.local_scale() += scale_increasing_;
     transform_model_.UpdateWorldMatrix();

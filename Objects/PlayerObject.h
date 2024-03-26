@@ -7,13 +7,16 @@
 
 namespace objects
 {
-    class PlayerObject final : public engine::physics::CollisionAble
+    class PlayerObject final : public engine::graphics::RenderAble, public engine::physics::CollisionAble
     {
     public:
         void Compose(const float3& position, const float3& scale, const float3& box_scale, const float3& box_increasing,
                      const float3& scale_increasing,
-                     const std::string& model_file_path, const std::string& texture_file_path);
-        void Compose(engine::graphics::RenderPipeline* pipeline);
+                     const std::string& model_file_path, const std::string& texture_file_path,
+                     engine::transform::TransformComponent* camera);
+        void Compose(engine::graphics::RenderPipeline* pipeline) override;
+
+        void Render(const float4x4& camera, float delta) override;
 
         void Collided(CollisionAble* other) override;
 

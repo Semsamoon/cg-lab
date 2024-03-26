@@ -19,15 +19,15 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Components\CubeComponent.h" />
     <ClInclude Include="Components\MeshComponent.h" />
     <ClInclude Include="Components\ModelComponent.h" />
+    <ClInclude Include="Components\SphereComponent.h" />
+    <ClInclude Include="Components\SquareComponent.h" />
     <ClInclude Include="Controllers\CameraController.h" />
     <ClInclude Include="Controllers\CameraControllerRadial.h" />
     <ClInclude Include="Controllers\PlayerController.h" />
-    <ClInclude Include="Engine\Graphics\Buffer.h" />
     <ClInclude Include="Engine\Graphics\ConstantBuffer.hpp" />
-    <ClInclude Include="Engine\Graphics\DepthShader.h" />
-    <ClInclude Include="Engine\Graphics\ShadowShader.h" />
     <ClInclude Include="Engine\Input\Device.h" />
     <ClInclude Include="Engine\Input\Keyboard.h" />
     <ClInclude Include="Engine\Input\Mouse.h" />
@@ -36,10 +36,13 @@
     <ClInclude Include="Engine\Physics\Collision.h" />
     <ClInclude Include="Engine\Physics\Movement.h" />
     <ClInclude Include="Engine\Physics\MovementAble.h" />
+    <ClInclude Include="Engine\Graphics\Buffers.h" />
     <ClInclude Include="Engine\Graphics\Camera.h" />
     <ClInclude Include="Engine\Graphics\RenderComponent.h" />
+    <ClInclude Include="Engine\Graphics\RasterizerState.h" />
     <ClInclude Include="Engine\Graphics\RenderPipeline.h" />
     <ClInclude Include="Engine\Graphics\RenderAble.h" />
+    <ClInclude Include="Engine\Graphics\Shaders.h" />
     <ClInclude Include="Engine\Graphics\Window.h" />
     <ClInclude Include="Engine\Transform\TransformComponent.h" />
     <ClInclude Include="Engine\Update\FixedUpdate.h" />
@@ -56,6 +59,7 @@
     <ClInclude Include="Objects\PlayerObject.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Components\CubeComponent.cpp" />
     <ClCompile Include="Components\MeshComponent.cpp">
       <RuntimeLibrary>MultiThreadedDebugDll</RuntimeLibrary>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -206,12 +210,11 @@
       <LinkCompiled>true</LinkCompiled>
       <AdditionalIncludeDirectories>D:\Education\projects\2 Computer Graphics\Lab\packages\directxtk_uwp.2024.1.1.1\build\native\..\..\include;</AdditionalIncludeDirectories>
     </ClCompile>
+    <ClCompile Include="Components\SphereComponent.cpp" />
+    <ClCompile Include="Components\SquareComponent.cpp" />
     <ClCompile Include="Controllers\CameraController.cpp" />
     <ClCompile Include="Controllers\CameraControllerRadial.cpp" />
     <ClCompile Include="Controllers\PlayerController.cpp" />
-    <ClCompile Include="Engine\Graphics\Buffer.cpp" />
-    <ClCompile Include="Engine\Graphics\DepthShader.cpp" />
-    <ClCompile Include="Engine\Graphics\ShadowShader.cpp" />
     <ClCompile Include="Engine\Input\Device.cpp">
       <RuntimeLibrary>MultiThreadedDebugDll</RuntimeLibrary>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -363,8 +366,10 @@
     <ClCompile Include="Engine\Physics\Collision.cpp" />
     <ClCompile Include="Engine\Physics\CollisionAble.cpp" />
     <ClCompile Include="Engine\Physics\Movement.cpp" />
+    <ClCompile Include="Engine\Graphics\Buffers.cpp" />
     <ClCompile Include="Engine\Graphics\Camera.cpp" />
     <ClCompile Include="Engine\Graphics\RenderComponent.cpp" />
+    <ClCompile Include="Engine\Graphics\RasterizerState.cpp" />
     <ClCompile Include="Engine\Graphics\RenderAble.cpp" />
     <ClCompile Include="Engine\Graphics\RenderPipeline.cpp">
       <RuntimeLibrary>MultiThreadedDebugDll</RuntimeLibrary>
@@ -441,6 +446,7 @@
       <LinkCompiled>true</LinkCompiled>
       <AdditionalIncludeDirectories>D:\Education\projects\2 Computer Graphics\Lab\packages\directxtk_uwp.2024.1.1.1\build\native\..\..\include;</AdditionalIncludeDirectories>
     </ClCompile>
+    <ClCompile Include="Engine\Graphics\Shaders.cpp" />
     <ClCompile Include="Engine\Graphics\Window.cpp">
       <RuntimeLibrary>MultiThreadedDebugDll</RuntimeLibrary>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -749,7 +755,6 @@
     <ClCompile Include="Objects\FoodObject.cpp" />
     <ClCompile Include="Objects\FoodSpawnerObject.cpp" />
     <ClCompile Include="Objects\PlayerObject.cpp" />
-    <Text Include="Shaders\ShadowShader.hlsl" />
     <ClCompile Include="Startup.cpp">
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
     </ClCompile>
@@ -761,9 +766,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="Shaders\DepthShader.hlsl" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
