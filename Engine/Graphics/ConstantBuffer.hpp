@@ -11,27 +11,28 @@ namespace engine
         public:
             T data;
 
-            void Compose(DXDevice* device, DXDeviceContext* context)
+            void Compose(DXDevice* device)
             {
-                context_ = context;
-
-                DXBufferDescriptor descriptor;
+                DXBufferDescriptor descriptor{};
                 descriptor.Usage = D3D11_USAGE_DYNAMIC;
                 descriptor.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
                 descriptor.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-                descriptor.MiscFlags = 0;
                 descriptor.ByteWidth = static_cast<uint32>(sizeof(T) + (16 - (sizeof(T) % 16)));
-                descriptor.StructureByteStride = 0;
 
                 device->CreateBuffer(&descriptor, nullptr, &buffer_);
             }
 
-            void Apply()
+            void Apply(DXDeviceContext* context)
             {
                 DXMappedSubresource subresource;
-                context_->Map(buffer_, 0, D3D11_MAP_WRITE_DISCARD, 0, &subresource);
+                context->Map(buffer_, 0, D3D11_MAP_WRITE_DISCARD, 0, &subresource);
                 CopyMemory(subresource.pData, &data, sizeof(T));
-                context_->Unmap(buffer_, 0);
+                context->Unmap(buffer_, 0);
+            }
+
+            void Release() const
+            {
+                buffer_->Release();
             }
 
             DXBuffer* buffer() const
@@ -46,7 +47,6 @@ namespace engine
 
         private:
             DXBuffer* buffer_ = nullptr;
-            DXDeviceContext* context_ = nullptr;
         };
     }
 }

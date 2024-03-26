@@ -15,19 +15,12 @@ void ModelComponent::Compose(const std::string& model_file_path, const std::stri
 
 void ModelComponent::Compose(engine::graphics::RenderPipeline* pipeline)
 {
-    RenderAble::Compose(pipeline);
-    for (auto& mesh : meshes_) mesh.Compose(pipeline_);
+    for (auto& mesh : meshes_) pipeline->Add(&mesh);
 }
 
-void ModelComponent::Compose(engine::transform::TransformComponent* transform,
-                             engine::transform::TransformComponent* camera)
+void ModelComponent::Compose(engine::transform::TransformComponent* transform)
 {
-    for (auto& mesh : meshes_) mesh.Compose(transform, camera);
-}
-
-void ModelComponent::Render(const float4x4& camera, float delta)
-{
-    for (auto& mesh : meshes_) mesh.Render(camera, delta);
+    for (auto& mesh : meshes_) mesh.Compose(transform);
 }
 
 void ModelComponent::ProcessNode(const aiNode* node, const aiScene* scene, const std::string& texture_file_path)

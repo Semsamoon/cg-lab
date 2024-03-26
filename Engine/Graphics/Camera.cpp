@@ -70,6 +70,11 @@ float4x4& Camera::projection_matrix()
     return projection_matrix_;
 }
 
+engine::transform::TransformComponent* Camera::transform() const
+{
+    return transform_;
+}
+
 bool Camera::is_perspective() const
 {
     return is_perspective_;

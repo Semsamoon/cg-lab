@@ -1,10 +1,9 @@
 ﻿#pragma once
 #include <string>
 
-#include "Buffers.h"
-#include "RasterizerState.h"
+#include "IndexBuffer.h"
 #include "RenderPipeline.h"
-#include "Shaders.h"
+#include "VertexBuffer.hpp"
 #include "../Transform/TransformComponent.h"
 #include "../../Lib/Types.h"
 
@@ -12,43 +11,39 @@ namespace engine
 {
     namespace graphics
     {
-        struct RenderParams
-        {
-            DXPrimitiveTopology primitive_topology;
-        };
-
-        struct TransformBufferParams
-        {
-            float4x4 world;
-            float4x4 world_view_projection;
-            float4 view_position;
-        };
-
         class RenderComponent : public RenderAble
         {
-        public:
-            RenderComponent();
+        protected:
+            struct VertexInputBufferElement
+            {
+                float3 position;
+                float3 normal;
+                float2 uv;
+            };
 
-            void Compose(transform::TransformComponent* transform, transform::TransformComponent* camera);
+            struct TransformBufferElement
+            {
+                float4x4 world;
+                float4x4 world_view_projection;
+            };
+
+        public:
+            void Compose(transform::TransformComponent* transform);
             void Compose(const std::string& texture_file_path);
-            void Compose(RenderPipeline* pipeline) override;
-            void Render(const float4x4& camera, float delta) override;
+            void Compose(DXDevice* device) override;
+
+            void Render(DXDeviceContext* context) override;
+
+            const float4x4& world() override;
+            DXShaderResourceView* texture() const override;
+            uint32 index_count() const override;
 
         protected:
-            void UpdateTransformBuffer(DXDeviceContext* context, const float4x4& camera);
-
             transform::TransformComponent* transform_ = nullptr;
-            ConstantBuffer<TransformBufferParams> transform_buffer_{};
 
-            transform::TransformComponent* camera_ = nullptr;
-
-            RenderParams render_params_{};
-            Shaders shaders_;
-            Buffers buffers_;
-            RasterizerState rasterizer_state_;
-
-            CD3D11_SAMPLER_DESC sample_descriptor{};
-            DXSamplerState* sampler_state_ = nullptr;
+            ConstantBuffer<TransformBufferElement> transform_buffer_{};
+            VertexBuffer<VertexInputBufferElement> vertex_buffer_{};
+            IndexBuffer index_buffer_{};
 
             DXShaderResourceView* texture_ = nullptr;
             std::string texture_file_path_;

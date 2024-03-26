@@ -9,7 +9,8 @@ using namespace objects;
 using namespace DirectX::SimpleMath;
 
 void FoodSpawnerObject::Compose(
-    std::string file_paths[], float probabilities[], float2 area, int32 amount, engine::transform::TransformComponent* camera)
+    std::string file_paths[], float probabilities[], float2 area, int32 amount,
+    engine::transform::TransformComponent* camera)
 {
     srand(static_cast<uint32>(std::chrono::high_resolution_clock::now().time_since_epoch().count()));
 
@@ -30,10 +31,9 @@ void FoodSpawnerObject::Compose(
     }
 }
 
-void FoodSpawnerObject::Compose(engine::graphics::RenderPipeline* pipeline)
+void FoodSpawnerObject::Compose(engine::graphics::RenderPipeline* pipeline) const
 {
-    RenderAble::Compose(pipeline);
-    for (auto& food : food_objects_) food.model()->Compose(pipeline_);
+    for (auto& food : food_objects_) food.model()->Compose(pipeline);
 }
 
 void FoodSpawnerObject::Compose(engine::physics::Collision* collision)
@@ -44,9 +44,4 @@ void FoodSpawnerObject::Compose(engine::physics::Collision* collision)
 void FoodSpawnerObject::Update(float delta)
 {
     for (auto& food : food_objects_) food.Update(delta);
-}
-
-void FoodSpawnerObject::Render(const float4x4& camera, float delta)
-{
-    for (auto& food : food_objects_) food.model()->Render(camera, delta);
 }

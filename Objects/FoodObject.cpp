@@ -18,7 +18,7 @@ void FoodObject::Compose(
     bounding_box_scale_ = box_scale / 2;
     model_ = new components::ModelComponent();
     model_->Compose(model_file_path, texture_file_path);
-    model_->Compose(transform_, camera);
+    model_->Compose(transform_);
 }
 
 void FoodObject::Update(float delta)

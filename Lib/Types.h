@@ -75,5 +75,6 @@ typedef CD3D11_RASTERIZER_DESC DXRasterizerDescriptor;
 
 typedef ID3D11SamplerState DXSamplerState;
 typedef ID3D11ShaderResourceView DXShaderResourceView;
+typedef D3D11_SAMPLER_DESC DXSamplerDescriptor;
 
 typedef D3D11_PRIMITIVE_TOPOLOGY DXPrimitiveTopology;

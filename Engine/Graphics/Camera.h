@@ -40,6 +40,8 @@ namespace engine
             float4x4& view_matrix();
             float4x4& projection_matrix();
 
+            transform::TransformComponent* transform() const;
+
             bool is_perspective() const;
 
         private:

@@ -5,17 +5,16 @@ namespace engine
 {
     namespace graphics
     {
-        class RenderPipeline;
-
         class RenderAble
         {
         public:
             virtual ~RenderAble() = default;
-            virtual void Compose(RenderPipeline* pipeline);
-            virtual void Render(const float4x4& camera, float delta) = 0;
+            virtual void Compose(DXDevice* device) = 0;
+            virtual void Render(DXDeviceContext* context) = 0;
 
-        protected:
-            RenderPipeline* pipeline_ = nullptr;
+            virtual uint32 index_count() const = 0;
+            virtual const float4x4& world() = 0;
+            virtual DXShaderResourceView* texture() const = 0;
         };
     }
 }
