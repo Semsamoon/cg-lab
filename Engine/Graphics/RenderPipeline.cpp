@@ -1,6 +1,7 @@
 #include "RenderPipeline.h"
 
 #include "../../Game.h"
+#include "../../Components/SquadComponent.h"
 
 using namespace engine::graphics;
 using namespace DirectX::SimpleMath;
@@ -35,6 +36,7 @@ void RenderPipeline::Compose(PHandlerWindow handler_window, const Point& size)
     //Shaders
     shader_.Compose(device_, L"./Shaders/Shader.hlsl");
     depth_shader_.Compose(device_, L"./Shaders/DepthShader.hlsl");
+    squad_shader_.Compose(device_, L"./Shaders/SquadShader.hlsl");
 
     //Ambient Light
     ambient_light_buffer_.data.color = float4(0.2f, 0.2f, 0.2f, 0);
@@ -166,6 +168,11 @@ void RenderPipeline::Render(const float4x4& view_projection, float delta)
         //     device_context_, render_able->index_count(), render_able->world(),
         //     directional_light_view_ * directional_light_projection_);
     }
+
+    components::SquadComponent squad;
+    squad.Compose(device_);
+    squad.Render(device_context_);
+    squad_shader_.Render(device_context_, squad.index_count(), resource_view_depth_point_light_);
 
     swap_chain_->Present(1, DXGI_PRESENT_DO_NOT_WAIT);
 }

@@ -21,6 +21,7 @@
   <ItemGroup>
     <ClInclude Include="Components\MeshComponent.h" />
     <ClInclude Include="Components\ModelComponent.h" />
+    <ClInclude Include="Components\SquadComponent.h" />
     <ClInclude Include="Controllers\CameraController.h" />
     <ClInclude Include="Controllers\CameraControllerRadial.h" />
     <ClInclude Include="Controllers\PlayerController.h" />
@@ -28,6 +29,7 @@
     <ClInclude Include="Engine\Graphics\DepthShader.h" />
     <ClInclude Include="Engine\Graphics\IndexBuffer.h" />
     <ClInclude Include="Engine\Graphics\Shader.h" />
+    <ClInclude Include="Engine\Graphics\SquadShader.h" />
     <ClInclude Include="Engine\Graphics\VertexBuffer.hpp" />
     <ClInclude Include="Engine\Input\Device.h" />
     <ClInclude Include="Engine\Input\Keyboard.h" />
@@ -207,11 +209,13 @@
       <LinkCompiled>true</LinkCompiled>
       <AdditionalIncludeDirectories>D:\Education\projects\2 Computer Graphics\Lab\packages\directxtk_uwp.2024.1.1.1\build\native\..\..\include;</AdditionalIncludeDirectories>
     </ClCompile>
+    <ClCompile Include="Components\SquadComponent.cpp" />
     <ClCompile Include="Controllers\CameraController.cpp" />
     <ClCompile Include="Controllers\CameraControllerRadial.cpp" />
     <ClCompile Include="Controllers\PlayerController.cpp" />
     <ClCompile Include="Engine\Graphics\DepthShader.cpp" />
     <ClCompile Include="Engine\Graphics\Shader.cpp" />
+    <ClCompile Include="Engine\Graphics\SquadShader.cpp" />
     <ClCompile Include="Engine\Input\Device.cpp">
       <RuntimeLibrary>MultiThreadedDebugDll</RuntimeLibrary>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -748,6 +752,7 @@
     <ClCompile Include="Objects\FoodObject.cpp" />
     <ClCompile Include="Objects\FoodSpawnerObject.cpp" />
     <ClCompile Include="Objects\PlayerObject.cpp" />
+    <Text Include="Shaders\SquadShader.hlsl" />
     <ClCompile Include="Startup.cpp">
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
     </ClCompile>

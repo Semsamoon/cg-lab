@@ -7,6 +7,7 @@
 #include "DepthShader.h"
 #include "RenderAble.h"
 #include "Shader.h"
+#include "SquadShader.h"
 #include "../../Lib/Types.h"
 
 namespace engine
@@ -83,6 +84,7 @@ namespace engine
 
             Shader shader_{};
             DepthShader depth_shader_{};
+            SquadShader squad_shader_{};
 
             ConstantBuffer<LightTransformBufferElement> light_transform_buffer_;
             ConstantBuffer<AmbientLightBufferElement> ambient_light_buffer_;
